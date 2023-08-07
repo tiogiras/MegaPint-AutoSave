@@ -1,12 +1,13 @@
 ﻿#if UNITY_EDITOR
 using System;
+using Editor.Scripts;
 using Editor.Scripts.Base;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Editor.Scripts
+namespace com.tiogiras.megapint_autosave.Editor.Scripts
 {
     public class MegaPintAutoSaveSettings : MegaPintSettingsWindowBase
     {

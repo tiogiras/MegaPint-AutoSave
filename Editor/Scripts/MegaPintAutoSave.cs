@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System;
 using System.Threading.Tasks;
+using Editor.Scripts;
 using Editor.Scripts.Base;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -8,7 +9,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
-namespace Editor.Scripts
+namespace com.tiogiras.megapint_autosave.Editor.Scripts
 {
     public class MegaPintAutoSave : MegaPintUtilityWindowBase
     {
