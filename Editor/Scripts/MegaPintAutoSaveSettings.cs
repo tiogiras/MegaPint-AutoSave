@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using Editor.Scripts.Base;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -161,3 +162,4 @@ namespace Editor.Scripts
         }
     }
 }
+#endif

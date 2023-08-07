@@ -1,4 +1,5 @@
-﻿namespace Editor.Scripts
+﻿#if UNITY_EDITOR
+namespace Editor.Scripts
 {
     public static class MegaPintAutoSaveData
     {
@@ -35,3 +36,4 @@
         };
     }
 }
+#endif

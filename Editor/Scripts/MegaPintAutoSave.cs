@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Threading.Tasks;
 using Editor.Scripts.Base;
@@ -181,3 +182,4 @@ namespace Editor.Scripts
         }
     }
 }
+#endif
