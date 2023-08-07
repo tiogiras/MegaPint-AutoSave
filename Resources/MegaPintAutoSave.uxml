@@ -1,0 +1,21 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=2f2b50e0e132e3a4989e6dbb646711fa&amp;type=3#MegaPint" />
+    <ui:GroupBox style="align-items: center; flex-direction: row; justify-content: space-between; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
+        <ui:GroupBox style="margin-left: 5px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; justify-content: flex-start; align-items: center; height: 15px;">
+            <ui:Label text="Next save:" display-tooltip-when-elided="true" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; width: 150px; -unity-text-align: middle-left;" />
+            <ui:Label text="00:00:00" display-tooltip-when-elided="true" name="NextSave" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; width: auto; -unity-text-align: middle-left; margin-right: 10px;" />
+            <ui:ProgressBar value="50" name="NextSaveProgress" style="width: 50px; height: 10px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+        </ui:GroupBox>
+        <ui:GroupBox style="height: 15px; width: 16px; margin-left: 0; margin-right: 5px; margin-top: 2px; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
+            <ui:Button display-tooltip-when-elided="true" name="Settings" class="megapint-button" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; background-image: resource(&apos;Images/New Project (2)&apos;); -unity-background-image-tint-color: rgb(255, 255, 255); width: 16px; height: 15px;" />
+        </ui:GroupBox>
+    </ui:GroupBox>
+    <ui:GroupBox style="margin-left: 5px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; justify-content: flex-start; align-items: center; height: 15px;">
+        <ui:Label text="Last save:" display-tooltip-when-elided="true" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; width: 150px; -unity-text-align: middle-left; color: rgba(210, 210, 210, 0.69);" />
+        <ui:Label text="00:00:00" display-tooltip-when-elided="true" name="LastSave" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; width: auto; -unity-text-align: middle-left; margin-right: 10px; color: rgba(210, 210, 210, 0.69);" />
+    </ui:GroupBox>
+    <ui:GroupBox style="margin-left: 5px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; justify-content: flex-start; align-items: center; height: 15px;">
+        <ui:Label text="Save interval:" display-tooltip-when-elided="true" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; width: 150px; -unity-text-align: middle-left; color: rgba(210, 210, 210, 0.69);" />
+        <ui:Label text="00 Sec" display-tooltip-when-elided="true" name="Interval" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; width: auto; -unity-text-align: middle-left; margin-right: 10px; color: rgba(210, 210, 210, 0.69);" />
+    </ui:GroupBox>
+</ui:UXML>
