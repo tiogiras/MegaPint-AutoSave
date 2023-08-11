@@ -1,7 +1,7 @@
 {
   "name": "com.tiogiras.megapint-autosave",
   "displayName": "megapint-autosave",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "unity": "2021.3",
   "keywords": [
     "2d",
@@ -9,5 +9,5 @@
     "sprite editor window"
   ],
   "category": "2D",
-  "description": "MegaPint Utility extension for autosave function"
+  "description": "MegaPint package for scene autosave function"
 }

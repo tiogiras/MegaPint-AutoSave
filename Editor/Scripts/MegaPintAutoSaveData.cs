@@ -1,5 +1,5 @@
 ﻿#if UNITY_EDITOR
-namespace com.tiogiras.megapint_autosave.Editor.Scripts
+namespace Editor.Scripts
 {
     public static class MegaPintAutoSaveData
     {

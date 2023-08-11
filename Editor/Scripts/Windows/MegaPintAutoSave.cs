@@ -1,7 +1,6 @@
 #if UNITY_EDITOR
 using System;
 using System.Threading.Tasks;
-using Editor.Scripts;
 using Editor.Scripts.Base;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -9,7 +8,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
-namespace com.tiogiras.megapint_autosave.Editor.Scripts
+namespace Editor.Scripts
 {
     public class MegaPintAutoSave : MegaPintUtilityWindowBase
     {
@@ -174,12 +173,6 @@ namespace com.tiogiras.megapint_autosave.Editor.Scripts
                 $"{_duplicatePathValue}/{scene.name} ({DateTime.Today:MM.dd.yy})({DateTime.Now:HH.mm.ss}).unity";
             
             EditorSceneManager.SaveScene(scene, destination, _saveModeValue == 1);
-        }
-
-        [MenuItem("MegaPint/AutoSave")]
-        private static void Open()
-        {
-            GetWindow<MegaPintAutoSave>().ShowWindow();
         }
     }
 }

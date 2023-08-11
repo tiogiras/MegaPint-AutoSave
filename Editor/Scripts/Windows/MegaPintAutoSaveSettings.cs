@@ -1,13 +1,12 @@
 ﻿#if UNITY_EDITOR
 using System;
-using Editor.Scripts;
 using Editor.Scripts.Base;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace com.tiogiras.megapint_autosave.Editor.Scripts
+namespace Editor.Scripts
 {
     public class MegaPintAutoSaveSettings : MegaPintSettingsWindowBase
     {
@@ -36,9 +35,16 @@ namespace com.tiogiras.megapint_autosave.Editor.Scripts
 
         #endregion
 
+        /// <summary> Current value of the interval from the settings </summary>
         private int _intervalValue;
+        
+        /// <summary> Current value of the saveMode from the settings </summary>
         private int _saveModeValue;
+        
+        /// <summary> Current value of the warning from the settings </summary>
         private bool _warningValue;
+        
+        /// <summary> Current value of the duplicatePath from the settings </summary>
         private string _pathValue;
 
         #region Overrides
