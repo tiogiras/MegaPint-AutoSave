@@ -1,14 +1,14 @@
 ﻿#if UNITY_EDITOR
 using System;
-using Editor.Scripts.Base;
+using Editor.Scripts.Settings;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Editor.Scripts
+namespace Editor.Scripts.Windows
 {
-    public class MegaPintAutoSaveSettings : MegaPintSettingsWindowBase
+    public class MegaPintAutoSaveSettings : MegaPintEditorWindowBase
     {
         /// <summary> Loaded reference of the uxml </summary>
         private VisualTreeAsset _baseWindow;
