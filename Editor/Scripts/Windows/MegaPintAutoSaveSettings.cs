@@ -49,7 +49,7 @@ namespace Editor.Scripts.Windows
 
         #region Overrides
 
-        protected override string BasePath() => "MegaPintAutoSaveSettings";
+        protected override string BasePath() => "User Interface/MegaPintAutoSaveSettings";
         public override MegaPintEditorWindowBase ShowWindow()
         {
             titleContent.text = "AutoSave - Settings";
