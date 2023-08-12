@@ -113,9 +113,10 @@ namespace Editor.Scripts.Windows
             return _baseWindow != null;
         }
 
-        protected override void LoadSettings()
+        protected override bool LoadSettings()
         {
-            Debug.Log(MegaPintSettings.Instance);
+            if (!base.LoadSettings())
+                return false;
             
             _intervalValue = MegaPintSettings.Instance.GetSetting(MegaPintAutoSaveData.SettingsName)
                 .GetValue(MegaPintAutoSaveData.Interval.Key, MegaPintAutoSaveData.Interval.DefaultValue);
@@ -125,6 +126,8 @@ namespace Editor.Scripts.Windows
 
             _duplicatePathValue = MegaPintSettings.Instance.GetSetting(MegaPintAutoSaveData.SettingsName)
                 .GetValue(MegaPintAutoSaveData.DuplicatePath.Key, MegaPintAutoSaveData.DuplicatePath.DefaultValue);
+
+            return true;
         }
 
         #endregion

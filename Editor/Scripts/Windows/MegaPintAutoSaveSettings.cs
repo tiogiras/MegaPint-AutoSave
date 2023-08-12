@@ -66,6 +66,7 @@ namespace Editor.Scripts.Windows
 
             _interval = content.Q<IntegerField>("Interval");
             _interval.value = _intervalValue;
+            _interval.RegisterValueChangedCallback(IntervalChange);
             
             _duplicatePath = content.Q<GroupBox>("DuplicatePath");
             _path = content.Q<Label>("Path");
@@ -88,12 +89,18 @@ namespace Editor.Scripts.Windows
         protected override void OnDestroy()
         {
             var settings = MegaPintSettings.Instance;
+            
+            if (settings == null)
+                return;
+            
             var autoSaveSettings = settings.GetSetting(MegaPintAutoSaveData.SettingsName);
             
             autoSaveSettings.SetValue(MegaPintAutoSaveData.Interval.Key, _interval.value);
             autoSaveSettings.SetValue(MegaPintAutoSaveData.SaveMode.Key, _saveMode.index);
             autoSaveSettings.SetValue(MegaPintAutoSaveData.Warning.Key, _warning.value);
             autoSaveSettings.SetValue(MegaPintAutoSaveData.DuplicatePath.Key, _path.text);
+            
+            _interval.RegisterValueChangedCallback(IntervalChange);
             
             _saveMode.UnregisterValueChangedCallback(UpdateDuplicatePathGUI);
             _change.clicked -= OnPathChange;
@@ -107,17 +114,28 @@ namespace Editor.Scripts.Windows
             return _baseWindow != null;
         }
 
-        protected override void LoadSettings()
+        protected override bool LoadSettings()
         {
+            if (!base.LoadSettings())
+                return false;
+            
             var settings = MegaPintSettings.Instance.GetSetting("MegaPint.AutoSave");
             _intervalValue = settings.GetValue(MegaPintAutoSaveData.Interval.Key, MegaPintAutoSaveData.Interval.DefaultValue);
             _saveModeValue = settings.GetValue(MegaPintAutoSaveData.SaveMode.Key, MegaPintAutoSaveData.SaveMode.DefaultValue);
             _warningValue = settings.GetValue(MegaPintAutoSaveData.Warning.Key, MegaPintAutoSaveData.Warning.DefaultValue);
             _pathValue = settings.GetValue(MegaPintAutoSaveData.DuplicatePath.Key, MegaPintAutoSaveData.DuplicatePath.DefaultValue);
+
+            return true;
         }
 
         #endregion
 
+        private void IntervalChange(ChangeEvent<int> evt)
+        {
+            if (evt.newValue < 1)
+                _interval.value = 1;
+        }
+        
         private void UpdateDuplicatePathGUI(ChangeEvent<string> evt)
         {
             _duplicatePath.style.display = _saveMode.index == 1 ? DisplayStyle.Flex : DisplayStyle.None;
