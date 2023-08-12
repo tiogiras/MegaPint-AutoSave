@@ -7,7 +7,7 @@ namespace Editor.Scripts
     public static partial class ContextMenu
     {
         [MenuItem("MegaPint/Packages/AutoSave", false, 12)]
-        private static void OpenAutoSave() => EditorWindow.GetWindow<MegaPintAutoSave>().ShowWindow();
+        private static void OpenAutoSave() => TryOpen<MegaPintAutoSave>(false);
     }
 }
 #endif

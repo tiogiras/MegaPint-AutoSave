@@ -20,6 +20,12 @@ namespace Editor.Scripts.Windows
         /// <summary> Reference to the progressbar displaying _currentSecond </summary>
         private ProgressBar _nextSaveProgress;
         
+        /// <summary> Reference to the playMode group </summary>
+        private GroupBox _playMode;
+        
+        /// <summary> Reference to the editMode group </summary>
+        private GroupBox _editMode;
+        
         /// <summary> Reference to the label displaying the time of the next save </summary>
         private Label _nextSave;
         
@@ -43,6 +49,8 @@ namespace Editor.Scripts.Windows
         /// <summary> Get the current duplicatePath from the settings </summary>
         private string _duplicatePathValue;
 
+        private bool _breakTimer;
+        
         #region Overrides
 
         protected override string BasePath() => "MegaPintAutoSave";
@@ -68,15 +76,35 @@ namespace Editor.Scripts.Windows
             _nextSave = content.Q<Label>("NextSave");
             _nextSaveProgress = content.Q<ProgressBar>("NextSaveProgress");
 
+            _playMode = content.Q<GroupBox>("PlayMode");
+            _editMode = content.Q<GroupBox>("EditMode");
+            
             _lastSave = content.Q<Label>("LastSave");
             _interval = content.Q<Label>("Interval");
-            _lastSave.text = "";
             UpdateStaticGUI();
 
             content.Q<Button>("Settings").clicked += OpenAutoSaveSettings;
             root.Add(content);
+            
+            EditorApplication.playModeStateChanged += PlayModeChange;
 
-            Timer();
+            if (EditorApplication.isPlaying)
+            {
+                _playMode.style.display = DisplayStyle.Flex;
+                _editMode.style.display = DisplayStyle.None;
+            }
+            else
+            {
+                _playMode.style.display = DisplayStyle.None;
+                _editMode.style.display = DisplayStyle.Flex;
+                var _ = Timer();
+            }
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            EditorApplication.playModeStateChanged -= PlayModeChange;
         }
 
         protected override bool LoadResources()
@@ -87,21 +115,43 @@ namespace Editor.Scripts.Windows
 
         protected override void LoadSettings()
         {
-            _intervalValue = MegaPintSettings.Get().GetSetting(MegaPintAutoSaveData.SettingsName)
+            Debug.Log(MegaPintSettings.Instance);
+            
+            _intervalValue = MegaPintSettings.Instance.GetSetting(MegaPintAutoSaveData.SettingsName)
                 .GetValue(MegaPintAutoSaveData.Interval.Key, MegaPintAutoSaveData.Interval.DefaultValue);
             
-            _saveModeValue = MegaPintSettings.Get().GetSetting(MegaPintAutoSaveData.SettingsName)
+            _saveModeValue = MegaPintSettings.Instance.GetSetting(MegaPintAutoSaveData.SettingsName)
                 .GetValue(MegaPintAutoSaveData.SaveMode.Key, MegaPintAutoSaveData.SaveMode.DefaultValue);
 
-            _duplicatePathValue = MegaPintSettings.Get().GetSetting(MegaPintAutoSaveData.SettingsName)
+            _duplicatePathValue = MegaPintSettings.Instance.GetSetting(MegaPintAutoSaveData.SettingsName)
                 .GetValue(MegaPintAutoSaveData.DuplicatePath.Key, MegaPintAutoSaveData.DuplicatePath.DefaultValue);
         }
 
         #endregion
 
+        private void PlayModeChange(PlayModeStateChange state)
+        {
+            switch (state)
+            {
+                case PlayModeStateChange.EnteredEditMode:
+                    _breakTimer = false;
+                    var _ = Timer();
+
+                    _playMode.style.display = DisplayStyle.None;
+                    _editMode.style.display = DisplayStyle.Flex;
+                    break;
+                case PlayModeStateChange.ExitingEditMode:
+                    _breakTimer = true;
+
+                    _playMode.style.display = DisplayStyle.Flex;
+                    _editMode.style.display = DisplayStyle.None;
+                    break;
+            }
+        }
+        
         private void OpenAutoSaveSettings()
         {
-            var window = GetWindow<MegaPintAutoSaveSettings>(true).ShowWindow();
+            var window = ContextMenu.TryOpen<MegaPintAutoSaveSettings>(true);
             if (window == null) 
                 return;
             
@@ -121,25 +171,23 @@ namespace Editor.Scripts.Windows
             
             window.OnClose -= SettingsWindowClosed;
         }
-        
-        private async void Timer()
+
+        private async Task Timer()
         {
-            while (true)
+            while (!_breakTimer && this != null)
             {
-                if (this == null)
-                {
-                    if (MegaPintSettings.Get().GetSetting("MegaPint.AutoSave")
-                        .GetValue(MegaPintAutoSaveData.Warning.Key, MegaPintAutoSaveData.Warning.DefaultValue))
-                        EditorApplication.Beep();
-                    
-                    return;
-                }
-
                 _currentSecond++;
-                UpdateGUI();
-
+                UpdateGUI();   
+                
                 await Task.Delay(1000);
             }
+            
+            if (this != null)
+                return;
+            
+            if (MegaPintSettings.Instance.GetSetting("MegaPint.AutoSave")
+                .GetValue(MegaPintAutoSaveData.Warning.Key, MegaPintAutoSaveData.Warning.DefaultValue))
+                EditorApplication.Beep();
         }
 
         private void UpdateGUI()
