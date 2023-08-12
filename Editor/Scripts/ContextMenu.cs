@@ -8,6 +8,9 @@ namespace Editor.Scripts
     {
         [MenuItem("MegaPint/Packages/AutoSave", false, 12)]
         private static void OpenAutoSave() => TryOpen<MegaPintAutoSave>(false);
+        
+        [MenuItem("MegaPint/Packages/Test", false, 12)]
+        private static void Test() {}
     }
 }
 #endif
