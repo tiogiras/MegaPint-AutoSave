@@ -154,7 +154,7 @@ namespace Editor.Scripts.Windows
         
         private void OpenAutoSaveSettings()
         {
-            var window = ContextMenu.TryOpen<MegaPintAutoSaveSettings>(true);
+            var window = ContextMenu.TryOpen<MegaPintAutoSaveSettings>(true, "AutoSave Settings");
             if (window == null) 
                 return;
             
