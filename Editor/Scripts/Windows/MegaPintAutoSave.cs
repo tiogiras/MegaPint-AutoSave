@@ -12,10 +12,7 @@ namespace Editor.Scripts.Windows
 {
     public class MegaPintAutoSave : MegaPintEditorWindowBase
     {
-        /// <summary> Loaded reference of the uxml </summary>
-        private VisualTreeAsset _baseWindow;
-
-        #region References
+        #region Visual References
 
         /// <summary> Reference to the progressbar displaying _currentSecond </summary>
         private ProgressBar _nextSaveProgress;
@@ -35,7 +32,14 @@ namespace Editor.Scripts.Windows
         /// <summary> Reference to the label displaying the current interval </summary>
         private Label _interval;
 
+        private Button _btnSettings;
+
         #endregion
+
+        #region Private
+
+        /// <summary> Loaded reference of the uxml </summary>
+        private VisualTreeAsset _baseWindow;
 
         /// <summary> Current progress towards the next save </summary>
         private int _currentSecond;
@@ -51,7 +55,9 @@ namespace Editor.Scripts.Windows
 
         private bool _breakTimer;
         
-        #region Overrides
+        #endregion
+        
+        #region Override Methods
 
         protected override string BasePath() => "User Interface/MegaPintAutoSave";
         
@@ -73,6 +79,8 @@ namespace Editor.Scripts.Windows
 
             VisualElement content = _baseWindow.Instantiate();
 
+            #region References
+
             _nextSave = content.Q<Label>("NextSave");
             _nextSaveProgress = content.Q<ProgressBar>("NextSaveProgress");
 
@@ -81,12 +89,14 @@ namespace Editor.Scripts.Windows
             
             _lastSave = content.Q<Label>("LastSave");
             _interval = content.Q<Label>("Interval");
-            UpdateStaticGUI();
 
-            content.Q<Button>("Settings").clicked += OpenAutoSaveSettings;
-            root.Add(content);
+            _btnSettings = content.Q<Button>("Settings");
             
-            EditorApplication.playModeStateChanged += PlayModeChange;
+            #endregion
+            
+            RegisterCallbacks();
+
+            UpdateStaticGUI();
 
             if (EditorApplication.isPlaying)
             {
@@ -99,12 +109,8 @@ namespace Editor.Scripts.Windows
                 _editMode.style.display = DisplayStyle.Flex;
                 var _ = Timer();
             }
-        }
-
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-            EditorApplication.playModeStateChanged -= PlayModeChange;
+            
+            root.Add(content);
         }
 
         protected override bool LoadResources()
@@ -130,9 +136,23 @@ namespace Editor.Scripts.Windows
             return true;
         }
 
+        protected override void RegisterCallbacks()
+        {
+            EditorApplication.playModeStateChanged += OnPlayModeChange;
+            _btnSettings.clicked += OnOpenAutoSaveSettings;
+        }
+
+        protected override void UnRegisterCallbacks()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeChange;
+            _btnSettings.clicked -= OnOpenAutoSaveSettings;
+        }
+
         #endregion
 
-        private void PlayModeChange(PlayModeStateChange state)
+        #region Callback Methods
+
+        private void OnPlayModeChange(PlayModeStateChange state)
         {
             switch (state)
             {
@@ -152,16 +172,16 @@ namespace Editor.Scripts.Windows
             }
         }
         
-        private void OpenAutoSaveSettings()
+        private void OnOpenAutoSaveSettings()
         {
             var window = ContextMenu.TryOpen<MegaPintAutoSaveSettings>(true, "AutoSave Settings");
             if (window == null) 
                 return;
             
-            window.OnClose += SettingsWindowClosed;
+            window.OnClose += OnSettingsWindowClosed;
         }
-
-        private void SettingsWindowClosed(MegaPintEditorWindowBase window)
+            
+        private void OnSettingsWindowClosed(MegaPintEditorWindowBase window)
         {
             LoadSettings();
             _currentSecond = 0;
@@ -172,8 +192,12 @@ namespace Editor.Scripts.Windows
             UpdateGUI();
             UpdateStaticGUI();
             
-            window.OnClose -= SettingsWindowClosed;
+            window.OnClose -= OnSettingsWindowClosed;
         }
+
+        #endregion
+
+        #region Internal Methods
 
         private async Task Timer()
         {
@@ -225,6 +249,8 @@ namespace Editor.Scripts.Windows
             
             EditorSceneManager.SaveScene(scene, destination, _saveModeValue == 1);
         }
+        
+        #endregion
     }
 }
 #endif

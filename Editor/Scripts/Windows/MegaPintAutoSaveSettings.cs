@@ -10,11 +10,8 @@ namespace Editor.Scripts.Windows
 {
     public class MegaPintAutoSaveSettings : MegaPintEditorWindowBase
     {
-        /// <summary> Loaded reference of the uxml </summary>
-        private VisualTreeAsset _baseWindow;
+        #region Visual References
 
-        #region References
-        
         /// <summary> Reference to the int field displaying the current interval </summary>
         private IntegerField _interval;
         
@@ -35,6 +32,11 @@ namespace Editor.Scripts.Windows
 
         #endregion
 
+        #region Private
+
+        /// <summary> Loaded reference of the uxml </summary>
+        private VisualTreeAsset _baseWindow;
+        
         /// <summary> Current value of the interval from the settings </summary>
         private int _intervalValue;
         
@@ -46,6 +48,8 @@ namespace Editor.Scripts.Windows
         
         /// <summary> Current value of the duplicatePath from the settings </summary>
         private string _pathValue;
+
+        #endregion
 
         #region Overrides
 
@@ -64,24 +68,25 @@ namespace Editor.Scripts.Windows
 
             VisualElement content = _baseWindow.Instantiate();
 
-            _interval = content.Q<IntegerField>("Interval");
-            _interval.value = _intervalValue;
-            _interval.RegisterValueChangedCallback(IntervalChange);
+            #region References
             
+            _interval = content.Q<IntegerField>("Interval");
             _duplicatePath = content.Q<GroupBox>("DuplicatePath");
             _path = content.Q<Label>("Path");
-            
             _saveMode = content.Q<DropdownField>("SaveMode");
-            _saveMode.RegisterValueChangedCallback(UpdateDuplicatePathGUI);
-            _saveMode.index = _saveModeValue;
-            
-            UpdateDuplicatePathGUI(null);
-
-            _change = content.Q<Button>("BTN_Change");
-            _change.clicked += OnPathChange;
-            
             _warning = content.Q<Toggle>("Warning");
+            
+            _change = content.Q<Button>("BTN_Change");
+            
+            #endregion
+            
+            RegisterCallbacks();
+            
+            _interval.value = _intervalValue;
+            _saveMode.index = _saveModeValue;
             _warning.value = _warningValue;
+            
+            OnUpdateDuplicatePathGUI(null);
 
             root.Add(content);
         }
@@ -99,12 +104,7 @@ namespace Editor.Scripts.Windows
             autoSaveSettings.SetValue(MegaPintAutoSaveData.SaveMode.Key, _saveMode.index);
             autoSaveSettings.SetValue(MegaPintAutoSaveData.Warning.Key, _warning.value);
             autoSaveSettings.SetValue(MegaPintAutoSaveData.DuplicatePath.Key, _path.text);
-            
-            _interval.RegisterValueChangedCallback(IntervalChange);
-            
-            _saveMode.UnregisterValueChangedCallback(UpdateDuplicatePathGUI);
-            _change.clicked -= OnPathChange;
-            
+
             base.OnDestroy();
         }
 
@@ -128,15 +128,33 @@ namespace Editor.Scripts.Windows
             return true;
         }
 
+        protected override void RegisterCallbacks()
+        {
+            _interval.RegisterValueChangedCallback(OnIntervalChange);
+            _saveMode.RegisterValueChangedCallback(OnUpdateDuplicatePathGUI);
+            
+            _change.clicked += OnPathChange;
+        }
+
+        protected override void UnRegisterCallbacks()
+        {
+            _interval.RegisterValueChangedCallback(OnIntervalChange);
+            _saveMode.UnregisterValueChangedCallback(OnUpdateDuplicatePathGUI);
+            
+            _change.clicked -= OnPathChange;
+        }
+
         #endregion
 
-        private void IntervalChange(ChangeEvent<int> evt)
+        #region Callback Methods
+
+        private void OnIntervalChange(ChangeEvent<int> evt)
         {
             if (evt.newValue < 1)
                 _interval.value = 1;
         }
         
-        private void UpdateDuplicatePathGUI(ChangeEvent<string> evt)
+        private void OnUpdateDuplicatePathGUI(ChangeEvent<string> evt)
         {
             _duplicatePath.style.display = _saveMode.index == 1 ? DisplayStyle.Flex : DisplayStyle.None;
             
@@ -164,7 +182,7 @@ namespace Editor.Scripts.Windows
 
             _path.tooltip = _pathValue;
         }
-        
+
         private void OnPathChange()
         {
             var path = EditorUtility.OpenFolderPanel("Set folder for duplicates", "Assets/", "");
@@ -182,9 +200,11 @@ namespace Editor.Scripts.Windows
                 EditorUtility.DisplayDialog("New folder",
                     $"All duplicates will now be saved to:\n{_pathValue}", "OK");
 
-                UpdateDuplicatePathGUI(null);
+                OnUpdateDuplicatePathGUI(null);
             }
         }
+        
+        #endregion
     }
 }
 #endif
