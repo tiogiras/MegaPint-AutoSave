@@ -1,13 +1,4 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=2f2b50e0e132e3a4989e6dbb646711fa&amp;type=3#MegaPint" />
-    <ui:GroupBox style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 10px; padding-left: 0; padding-right: 0; padding-top: 5px; padding-bottom: 5px; background-image: resource(&apos;Images/Background/Background 2&apos;);">
-        <ui:Label text="AutoSave - Settings" display-tooltip-when-elided="true" style="-unity-font-style: bold; -unity-text-align: upper-center; -unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
-    </ui:GroupBox>
-    <uie:IntegerField label="Interval (Seconds)" value="30" name="Interval" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;);" />
-    <ui:DropdownField label="Save Mode" index="0" choices="Save As Current, Save As Duplicate" name="SaveMode" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;);" />
-    <ui:GroupBox name="DuplicatePath" style="margin-top: 1px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; align-items: center; margin-left: 30px; height: 18px;">
-        <ui:Button text="Change" display-tooltip-when-elided="true" name="BTN_Change" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 3px; padding-right: 1px; padding-top: 1px; padding-bottom: 3px; font-size: 12px;" />
-        <ui:Label text="Assets/.../FolderName(max 20)" display-tooltip-when-elided="true" name="Path" style="color: rgba(210, 210, 210, 0.69); margin-left: 5px; -unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;);" />
-    </ui:GroupBox>
-    <ui:Toggle label="Warning on exit" name="Warning" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;);" />
+    <ui:Label text="Scene - AutoSave" display-tooltip-when-elided="true" style="background-color: rgb(37, 37, 37); -unity-font-style: bold; -unity-text-align: upper-center; -unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); padding-top: 5px; padding-bottom: 5px; width: 100%; font-size: 16px; white-space: normal;" />
 </ui:UXML>
