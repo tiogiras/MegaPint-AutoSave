@@ -93,7 +93,7 @@ namespace Editor.Scripts.Windows
 
         protected override void OnDestroy()
         {
-            var settings = MegaPintSettings.Instance;
+            var settings = MegaPintSettings.instance;
             
             if (settings == null)
                 return;
@@ -119,7 +119,7 @@ namespace Editor.Scripts.Windows
             if (!base.LoadSettings())
                 return false;
             
-            var settings = MegaPintSettings.Instance.GetSetting("MegaPint.AutoSave");
+            var settings = MegaPintSettings.instance.GetSetting("MegaPint.AutoSave");
             _intervalValue = settings.GetValue(MegaPintAutoSaveData.Interval.Key, MegaPintAutoSaveData.Interval.DefaultValue);
             _saveModeValue = settings.GetValue(MegaPintAutoSaveData.SaveMode.Key, MegaPintAutoSaveData.SaveMode.DefaultValue);
             _warningValue = settings.GetValue(MegaPintAutoSaveData.Warning.Key, MegaPintAutoSaveData.Warning.DefaultValue);

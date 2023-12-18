@@ -124,13 +124,13 @@ namespace Editor.Scripts.Windows
             if (!base.LoadSettings())
                 return false;
             
-            _intervalValue = MegaPintSettings.Instance.GetSetting(MegaPintAutoSaveData.SettingsName)
+            _intervalValue = MegaPintSettings.instance.GetSetting(MegaPintAutoSaveData.SettingsName)
                 .GetValue(MegaPintAutoSaveData.Interval.Key, MegaPintAutoSaveData.Interval.DefaultValue);
             
-            _saveModeValue = MegaPintSettings.Instance.GetSetting(MegaPintAutoSaveData.SettingsName)
+            _saveModeValue = MegaPintSettings.instance.GetSetting(MegaPintAutoSaveData.SettingsName)
                 .GetValue(MegaPintAutoSaveData.SaveMode.Key, MegaPintAutoSaveData.SaveMode.DefaultValue);
 
-            _duplicatePathValue = MegaPintSettings.Instance.GetSetting(MegaPintAutoSaveData.SettingsName)
+            _duplicatePathValue = MegaPintSettings.instance.GetSetting(MegaPintAutoSaveData.SettingsName)
                 .GetValue(MegaPintAutoSaveData.DuplicatePath.Key, MegaPintAutoSaveData.DuplicatePath.DefaultValue);
 
             return true;
@@ -178,7 +178,7 @@ namespace Editor.Scripts.Windows
             if (window == null) 
                 return;
             
-            window.OnClose += OnSettingsWindowClosed;
+            window.onClose += OnSettingsWindowClosed;
         }
             
         private void OnSettingsWindowClosed(MegaPintEditorWindowBase window)
@@ -192,7 +192,7 @@ namespace Editor.Scripts.Windows
             UpdateGUI();
             UpdateStaticGUI();
             
-            window.OnClose -= OnSettingsWindowClosed;
+            window.onClose -= OnSettingsWindowClosed;
         }
 
         #endregion
@@ -212,7 +212,7 @@ namespace Editor.Scripts.Windows
             if (this != null)
                 return;
             
-            if (MegaPintSettings.Instance.GetSetting("MegaPint.AutoSave")
+            if (MegaPintSettings.instance.GetSetting("MegaPint.AutoSave")
                 .GetValue(MegaPintAutoSaveData.Warning.Key, MegaPintAutoSaveData.Warning.DefaultValue))
                 EditorApplication.Beep();
         }

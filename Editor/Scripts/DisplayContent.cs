@@ -6,7 +6,8 @@ namespace Editor.Scripts
 {
     internal static partial class DisplayContent
     {
-        private static partial void AutoSave(VisualElement root)
+        // Called by reflection
+        private static void AutoSave(VisualElement root)
         {
             // TODO this
             Debug.Log("TODO: AutoSave Display Logic");
