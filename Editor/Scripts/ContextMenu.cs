@@ -4,9 +4,9 @@ using UnityEditor;
 
 namespace Editor.Scripts
 {
-    public static partial class ContextMenu
+    internal static partial class ContextMenu
     {
-        [MenuItem("MegaPint/Packages/AutoSave", false, 12)]
+        [MenuItem(MenuItemPackages + "/AutoSave", false, 12)]
         private static void OpenAutoSave() => TryOpen<MegaPintAutoSave>(false);
     }
 }

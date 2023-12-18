@@ -1,11 +1,12 @@
 ﻿#if UNITY_EDITOR
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Editor.Scripts
 {
-    public static partial class DisplayContent
+    internal static partial class DisplayContent
     {
-        private static partial void AutoSave()
+        private static partial void AutoSave(VisualElement root)
         {
             // TODO this
             Debug.Log("TODO: AutoSave Display Logic");
