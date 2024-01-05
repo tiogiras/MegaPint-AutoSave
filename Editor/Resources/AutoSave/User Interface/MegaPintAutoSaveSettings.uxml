@@ -3,18 +3,13 @@
     <ui:GroupBox style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 5px; padding-bottom: 5px; background-image: resource(&apos;Images/Background/Background 2&apos;);">
         <uie:ObjectField label="Preset" type="Editor.Scripts.AutoSavePreset, tiogiras.megapint.Editor" name="Preset" />
     </ui:GroupBox>
-    <ui:GroupBox name="Overwrites" style="margin-top: 5px; margin-right: 0; margin-bottom: 10px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row-reverse; opacity: 1;">
-        <ui:Button text="Revert" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Revert" class="megapint-button" />
-        <ui:Button text="Apply" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Apply" class="megapint-button" />
-        <ui:Label tabindex="-1" text="Overwrites" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: middle-left; -unity-font-style: bold;" />
-    </ui:GroupBox>
     <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; align-items: center;">
         <ui:VisualElement name="Interval_Overwrite" style="width: 3px; background-color: rgb(209, 0, 114); height: 90%; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 1px;" />
         <uie:IntegerField label="Interval (Seconds)" value="30" name="Interval" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); flex-shrink: 1;" />
     </ui:GroupBox>
     <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row;">
         <ui:VisualElement name="SaveMode_Overwrite" style="width: 2px; background-color: rgb(209, 0, 114); height: 90%; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 1px;" />
-        <ui:DropdownField label="Save Mode" index="0" choices="Save As Current, Save As Duplicate" name="SaveMode" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); flex-shrink: 1;" />
+        <ui:DropdownField label="Save Mode" index="0" choices="Save As Current, Save As Duplicate" name="SaveMode" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); flex-shrink: 1; flex-grow: 1;" />
     </ui:GroupBox>
     <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row;">
         <ui:VisualElement name="DuplicatePath_Overwrite" style="width: 2px; background-color: rgb(209, 0, 114); height: 90%; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 1px;" />
@@ -26,5 +21,14 @@
     <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; flex-direction: row; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
         <ui:VisualElement name="Warning_Overwrite" style="width: 2px; background-color: rgb(209, 0, 114); height: 90%; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 1px;" />
         <ui:Toggle label="Warning on exit" name="Warning" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); flex-shrink: 1;" />
+    </ui:GroupBox>
+    <ui:IMGUIContainer style="background-image: none; height: 2px; margin-left: 4px; margin-right: 4px; margin-top: 4px; margin-bottom: 4px; border-top-left-radius: 1px; border-bottom-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; background-color: rgb(88, 88, 88);" />
+    <ui:GroupBox style="margin-top: 5px; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row-reverse; justify-content: space-between; align-items: center; height: auto;">
+        <ui:Button text="Done" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Done" class="megapint-button" style="height: 15px;" />
+        <ui:GroupBox name="Overwrites" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; opacity: 1; align-items: center;">
+            <ui:Label tabindex="-1" text="Overwrites" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: middle-left; -unity-font-style: bold; color: rgb(209, 0, 114);" />
+            <ui:Button text="Apply" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Apply" class="megapint-button" style="height: 15px;" />
+            <ui:Button text="Revert" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Revert" class="megapint-button" style="height: 15px;" />
+        </ui:GroupBox>
     </ui:GroupBox>
 </ui:UXML>

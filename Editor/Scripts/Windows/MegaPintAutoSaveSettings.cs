@@ -47,9 +47,7 @@ public class MegaPintAutoSaveSettings : MegaPintEditorWindowBase
     {
         _duplicatePath.style.display = _saveMode.index == 1 ? DisplayStyle.Flex : DisplayStyle.None;
 
-        var y = _saveMode.index == 1 ? 125 : 100;
-        minSize = new Vector2(300, y);
-        maxSize = new Vector2(300, y);
+        UpdateWindowSize();
 
         var duplicatePathValue = MegaPintAutoSaveData.DuplicatePathValue;
         
@@ -76,6 +74,14 @@ public class MegaPintAutoSaveSettings : MegaPintEditorWindowBase
         _path.tooltip = duplicatePathValue;
     }
 
+    private void UpdateWindowSize()
+    {
+        var y = _saveMode.index == 1 ? 150 : 130;
+
+        minSize = new Vector2(300, y);
+        maxSize = new Vector2(300, y);
+    }
+
     #endregion
 
     #region Visual References
@@ -83,20 +89,32 @@ public class MegaPintAutoSaveSettings : MegaPintEditorWindowBase
     /// <summary> Reference to the int field displaying the current interval </summary>
     private IntegerField _interval;
 
+    private VisualElement _intervalOverwrite;
+
     /// <summary> Reference to the dropdown displaying the current saveMode </summary>
     private DropdownField _saveMode;
+    
+    private VisualElement _saveModeOverwrite;
 
     /// <summary> Reference to the toggle displaying the warning settings </summary>
     private Toggle _warning;
+    
+    private VisualElement _warningOverwrite;
 
     /// <summary> Reference to the GroupBox containing the path settings </summary>
     private GroupBox _duplicatePath;
+    
+    private VisualElement _duplicatePathOverwrite;
 
     /// <summary> Reference to the label displaying the duplicatePath </summary>
     private Label _path;
 
     /// <summary> Reference to the change button </summary>
     private Button _change;
+
+    private Button _btnDone;
+
+    private GroupBox _overwrites;
 
     #endregion
 
@@ -105,20 +123,13 @@ public class MegaPintAutoSaveSettings : MegaPintEditorWindowBase
     /// <summary> Loaded reference of the uxml </summary>
     private VisualTreeAsset _baseWindow;
 
-    // private MegaPintAutoSaveData.AutoSaveSettings _currentSettings;
+    private bool _intervalOverwritten;
+    private bool _saveModeOverwritten;
+    private bool _duplicatePathOverwritten;
+    private bool _warningOverwritten;
 
-    /*/// <summary> Current value of the interval from the settings </summary>
-    private int _intervalValue;
+    private bool _hasOverwrites;
     
-    /// <summary> Current value of the saveMode from the settings </summary>
-    private int _saveModeValue;
-    
-    /// <summary> Current value of the warning from the settings </summary>
-    private bool _warningValue;
-    
-    /// <summary> Current value of the duplicatePath from the settings </summary>
-    private string _pathValue;*/
-
     #endregion
 
     #region Overrides
@@ -146,12 +157,23 @@ public class MegaPintAutoSaveSettings : MegaPintEditorWindowBase
         #region References
 
         _interval = content.Q <IntegerField>("Interval");
-        _duplicatePath = content.Q <GroupBox>("DuplicatePath");
+        _intervalOverwrite = content.Q <VisualElement>("Interval_Overwrite");
+        
         _path = content.Q <Label>("Path");
+        _duplicatePath = content.Q <GroupBox>("DuplicatePath");
+        _duplicatePathOverwrite = content.Q <VisualElement>("DuplicatePath_Overwrite");
+
         _saveMode = content.Q <DropdownField>("SaveMode");
+        _saveModeOverwrite = content.Q <VisualElement>("SaveMode_Overwrite");
+        
         _warning = content.Q <Toggle>("Warning");
+        _warningOverwrite = content.Q <VisualElement>("Warning_Overwrite");
 
         _change = content.Q <Button>("BTN_Change");
+
+        _overwrites = content.Q <GroupBox>("Overwrites");
+
+        _btnDone = content.Q <Button>("BTN_Done");
 
         #endregion
 
@@ -161,9 +183,28 @@ public class MegaPintAutoSaveSettings : MegaPintEditorWindowBase
         _saveMode.index = MegaPintAutoSaveData.SaveModeValue;
         _warning.value = MegaPintAutoSaveData.WarningValue;
 
+        // TODO load overwrites when there are some
+        _intervalOverwritten = false;
+        _saveModeOverwritten = false;
+        _duplicatePathOverwritten = false;
+        _warningOverwritten = false;
+        _hasOverwrites = true;
+        
+        SetOverwrites();
+        
         OnUpdateDuplicatePathGUI(null);
 
         root.Add(content);
+    }
+
+    private void SetOverwrites()
+    {
+        _overwrites.style.display = _hasOverwrites ? DisplayStyle.Flex : DisplayStyle.None;
+        
+        _intervalOverwrite.style.display = _intervalOverwritten ? DisplayStyle.Flex : DisplayStyle.None;
+        _saveModeOverwrite.style.display = _saveModeOverwritten ? DisplayStyle.Flex : DisplayStyle.None;
+        _duplicatePathOverwrite.style.display = _duplicatePathOverwritten ? DisplayStyle.Flex : DisplayStyle.None;
+        _warningOverwrite.style.display = _warningOverwritten ? DisplayStyle.Flex : DisplayStyle.None;
     }
 
     protected override void OnDestroy()
@@ -172,7 +213,6 @@ public class MegaPintAutoSaveSettings : MegaPintEditorWindowBase
 
         if (settings == null)
             return;
-        
 
         MegaPintAutoSaveData.IntervalValue = _interval.value;
         MegaPintAutoSaveData.SaveModeValue = _saveMode.index;
@@ -192,6 +232,11 @@ public class MegaPintAutoSaveSettings : MegaPintEditorWindowBase
     {
         _interval.RegisterValueChangedCallback(OnIntervalChange);
         _saveMode.RegisterValueChangedCallback(OnUpdateDuplicatePathGUI);
+        _btnDone.clickable = new Clickable(
+            _ =>
+            {
+                Close();
+            });
 
         _change.clicked += OnPathChange;
     }
@@ -200,7 +245,8 @@ public class MegaPintAutoSaveSettings : MegaPintEditorWindowBase
     {
         _interval.RegisterValueChangedCallback(OnIntervalChange);
         _saveMode.UnregisterValueChangedCallback(OnUpdateDuplicatePathGUI);
-
+        _btnDone.clickable = null;
+        
         _change.clicked -= OnPathChange;
     }
 
