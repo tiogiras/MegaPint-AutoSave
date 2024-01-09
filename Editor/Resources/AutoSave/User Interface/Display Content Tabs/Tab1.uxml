@@ -1,0 +1,18 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=2f2b50e0e132e3a4989e6dbb646711fa&amp;type=3#MegaPint" />
+    <ui:GroupBox style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+        <ui:Label tabindex="-1" text="Default Settings" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-font-style: bold; -unity-text-align: upper-center; white-space: normal; margin-bottom: 15px; color: rgb(209, 0, 114); font-size: 16px;" />
+        <uie:IntegerField label="Interval" value="30" name="Interval" tooltip="The interval in which the autosave saves the scene (in seconds)" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); flex-shrink: 1;" />
+        <ui:DropdownField label="Save Mode" index="0" choices="Save As Current, Save As Duplicate" name="SaveMode" tooltip="The modde in which the scene will be saved" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); flex-shrink: 1; flex-grow: 1;" />
+        <ui:GroupBox name="DuplicatePath" style="margin-top: 1px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; align-items: center; margin-left: 30px; height: 18px; flex-shrink: 1;">
+            <ui:Button text="Change" display-tooltip-when-elided="true" name="BTN_Change" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 3px; padding-right: 1px; padding-top: 1px; padding-bottom: 3px; font-size: 12px;" />
+            <ui:Label text="Assets/.../FolderName(max 20)" display-tooltip-when-elided="true" name="Path" style="color: rgba(210, 210, 210, 0.69); margin-left: 5px; -unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;);" />
+        </ui:GroupBox>
+        <ui:Toggle label="Warning on exit" name="Warning" tooltip="If set the autosave will alert if closed" style="-unity-font-definition: initial; -unity-font: resource(&apos;RobotoMono-VariableFont_wght&apos;); flex-shrink: 1;" />
+        <ui:GroupBox style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row-reverse;">
+            <ui:Button text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" tooltip="Save the current settings as default settings" name="BTN_Save" class="megapint-button" />
+        </ui:GroupBox>
+        <ui:IMGUIContainer style="background-image: none; height: 2px; margin-left: 4px; margin-right: 4px; margin-top: 15px; margin-bottom: 4px; border-top-left-radius: 1px; border-bottom-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; background-color: rgb(88, 88, 88);" />
+        <ui:Label tabindex="-1" text="The settings defined here act as the default settings that are applied to any scene unless the scene has specific settings or inherits from a preset." parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: upper-center; white-space: normal; -unity-font-style: normal;" />
+    </ui:GroupBox>
+</ui:UXML>
