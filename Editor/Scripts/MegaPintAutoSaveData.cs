@@ -7,8 +7,6 @@ namespace Editor.Scripts
 
 public static class MegaPintAutoSaveData
 {
-    public static Action onSettingsChanged;
-
     private struct SettingsValue <T>
     {
         public string key;
@@ -16,6 +14,7 @@ public static class MegaPintAutoSaveData
     }
 
     private const string SettingsName = "MegaPint.AutoSave";
+    public static Action onSettingsChanged;
 
     private static readonly SettingsValue <string> s_duplicatePath = new() {key = "duplicatePath", defaultValue = "Assets"};
 

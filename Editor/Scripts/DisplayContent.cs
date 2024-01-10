@@ -30,11 +30,11 @@ internal static partial class DisplayContent
 
         SwitchTab(tabContentParent, 0);
     }
-    
+
     private static void AutoSavePathChange(Label pathLabel, VisualElement btnSave)
     {
         var oldValue = MegaPintAutoSaveData.DuplicatePathValue;
-        
+
         var path = EditorUtility.OpenFolderPanel("Set folder for duplicates", "Assets/", "");
 
         if (!path.StartsWith(Application.dataPath))
@@ -53,7 +53,7 @@ internal static partial class DisplayContent
 
             AutoSavePathVisuals(pathLabel);
         }
-        
+
         if (!path.Equals(oldValue))
             btnSave.style.display = DisplayStyle.Flex;
     }
@@ -90,7 +90,7 @@ internal static partial class DisplayContent
         root.Q <Button>("BTN_Open").clickable = new Clickable(
             _ => {ContextMenu.TryOpen <MegaPintAutoSave>(false);});
     }
-    
+
     private static void AutoSaveTab1(VisualElement root)
     {
         #region Collect References
@@ -156,9 +156,9 @@ internal static partial class DisplayContent
             MegaPintAutoSaveData.SaveModeValue = saveMode.index;
             MegaPintAutoSaveData.WarningValue = warning.value;
             MegaPintAutoSaveData.DuplicatePathValue = path.tooltip;
-            
+
             MegaPintSettings.Save();
-            
+
             MegaPintAutoSaveData.onSettingsChanged?.Invoke();
 
             btnSave.style.display = DisplayStyle.None;
@@ -173,9 +173,12 @@ internal static partial class DisplayContent
         {
             case 0:
                 AutoSaveTab0(root);
+
                 break;
+
             case 1:
                 AutoSaveTab1(root);
+
                 break;
         }
     }

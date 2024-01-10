@@ -90,7 +90,7 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
     protected override void UnRegisterCallbacks()
     {
         EditorApplication.playModeStateChanged -= OnPlayModeChange;
-        
+
         MegaPintAutoSaveData.onSettingsChanged -= UpdateStaticGUI;
     }
 
@@ -121,7 +121,7 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
         }
     }
 
-    private void Save()
+    private static void Save()
     {
         var saveModeValue = MegaPintAutoSaveData.SaveModeValue;
 
