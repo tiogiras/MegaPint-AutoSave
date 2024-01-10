@@ -16,6 +16,7 @@ internal static partial class DisplayContent
     #region Private Methods
 
     // Called by reflection
+    // ReSharper disable once UnusedMember.Local
     private static void AutoSave(VisualElement root)
     {
         var tabs = root.Q <GroupBox>("Tabs");
