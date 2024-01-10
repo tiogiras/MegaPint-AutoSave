@@ -3,7 +3,6 @@
     <ui:GroupBox name="EditMode" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
         <ui:GroupBox style="margin-top: 5px; margin-right: 0; margin-bottom: 0; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row;">
             <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Play" class="megapint-button" style="background-image: resource(&apos;AutoSave/Images/Play Icon&apos;); width: 15px; height: 15px; -unity-background-image-tint-color: rgb(209, 0, 114); opacity: 1;" />
-            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Pause" class="megapint-button" style="width: 15px; height: 15px; background-image: resource(&apos;AutoSave/Images/Pause Icon&apos;); -unity-background-image-tint-color: rgb(255, 0, 139);" />
             <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Stop" class="megapint-button" style="width: 15px; height: 15px; background-image: resource(&apos;AutoSave/Images/Stop Icon&apos;); -unity-background-image-tint-color: rgb(209, 0, 114); opacity: 1;" />
         </ui:GroupBox>
         <ui:GroupBox style="align-items: center; flex-direction: row; justify-content: space-between; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
