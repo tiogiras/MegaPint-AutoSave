@@ -4,10 +4,19 @@ using UnityEditor;
 
 namespace Editor.Scripts
 {
-    internal static partial class ContextMenu
+
+internal static partial class ContextMenu
+{
+    #region Private Methods
+
+    [MenuItem(MenuItemPackages + "/AutoSave", false, 12)]
+    private static void OpenAutoSave()
     {
-        [MenuItem(MenuItemPackages + "/AutoSave", false, 12)]
-        private static void OpenAutoSave() => TryOpen<MegaPintAutoSave>(false);
+        TryOpen <MegaPintAutoSave>(false);
     }
+
+    #endregion
+}
+
 }
 #endif

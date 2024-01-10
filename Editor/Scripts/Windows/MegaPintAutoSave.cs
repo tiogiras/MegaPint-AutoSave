@@ -16,8 +16,8 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
 
     public override MegaPintEditorWindowBase ShowWindow()
     {
-        minSize = new Vector2(300, 65);
-        maxSize = new Vector2(300, 65);
+        minSize = new Vector2(300, 90);
+        maxSize = new Vector2(300, 90);
 
         titleContent.text = "AutoSave";
 
@@ -52,7 +52,8 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
         _lastSave = content.Q <Label>("LastSave");
         _interval = content.Q <Label>("Interval");
 
-        _btnSettings = content.Q <Button>("Settings");
+        _btnPlay = _editMode.Q <Button>("BTN_Play");
+        _btnStop = _editMode.Q <Button>("BTN_Stop");
 
         #endregion
 
@@ -85,27 +86,50 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
     protected override void RegisterCallbacks()
     {
         EditorApplication.playModeStateChanged += OnPlayModeChange;
-        _btnSettings.clicked += OnOpenAutoSaveSettings;
+
+        MegaPintAutoSaveData.onSettingsChanged += UpdateStaticGUI;
+
+#pragma warning disable CS4014
+        _btnPlay.clickable = new Clickable(_ => {Timer();});
+#pragma warning restore CS4014
+
+        _btnStop.clickable = new Clickable(_ => {_stopTimer = true;});
     }
 
     protected override void UnRegisterCallbacks()
     {
         EditorApplication.playModeStateChanged -= OnPlayModeChange;
-        _btnSettings.clicked -= OnOpenAutoSaveSettings;
+
+        MegaPintAutoSaveData.onSettingsChanged -= UpdateStaticGUI;
+
+        _btnPlay.clickable = null;
+        _btnStop.clickable = null;
     }
 
     #endregion
 
     #region Private Methods
 
-    private void OnOpenAutoSaveSettings()
+    private static void Save()
     {
-        MegaPintEditorWindowBase window = ContextMenu.TryOpen <MegaPintAutoSaveSettings>(true, "AutoSave Settings");
+        var saveModeValue = MegaPintAutoSaveData.SaveModeValue;
 
-        if (window == null)
-            return;
+        Scene scene = SceneManager.GetActiveScene();
 
-        window.onClose += OnSettingsWindowClosed;
+        var destination = saveModeValue == 0
+            ? scene.path
+            : $"{MegaPintAutoSaveData.DuplicatePathValue}/{scene.name} ({DateTime.Today:MM.dd.yy})({DateTime.Now:HH.mm.ss}).unity";
+
+        EditorSceneManager.SaveScene(scene, destination, saveModeValue == 1);
+    }
+
+    private void ChangeButtonStates(bool active)
+    {
+        _btnPlay.style.opacity = active ? .5f : 1f;
+        _btnPlay.focusable = !active;
+
+        _btnStop.style.opacity = active ? 1f : .5f;
+        _btnStop.focusable = active;
     }
 
     private void OnPlayModeChange(PlayModeStateChange state)
@@ -131,38 +155,12 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
         }
     }
 
-    private void OnSettingsWindowClosed(MegaPintEditorWindowBase window)
-    {
-        LoadSettings();
-        _currentSecond = 0;
-
-        var intervalValue = MegaPintAutoSaveData.IntervalValue;
-
-        _nextSaveProgress.highValue = intervalValue;
-        _interval.text = $"{intervalValue} Seconds";
-
-        UpdateGUI();
-        UpdateStaticGUI();
-
-        window.onClose -= OnSettingsWindowClosed;
-    }
-
-    private void Save()
-    {
-        var saveModeValue = MegaPintAutoSaveData.SaveModeValue;
-
-        Scene scene = SceneManager.GetActiveScene();
-
-        var destination = saveModeValue == 0
-            ? scene.path
-            : $"{MegaPintAutoSaveData.DuplicatePathValue}/{scene.name} ({DateTime.Today:MM.dd.yy})({DateTime.Now:HH.mm.ss}).unity";
-
-        EditorSceneManager.SaveScene(scene, destination, saveModeValue == 1);
-    }
-
     private async Task Timer()
     {
-        while (!_breakTimer && this != null)
+        ToggleGUI(true);
+        ChangeButtonStates(true);
+
+        while (!_breakTimer && !_stopTimer && this != null)
         {
             _currentSecond++;
             UpdateGUI();
@@ -170,21 +168,27 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
             await Task.Delay(1000);
         }
 
-        var warningValue = MegaPintAutoSaveData.WarningValue;
+        _stopTimer = false;
+        _currentSecond = 0;
 
-        if (this != null)
-        {
-            if (warningValue)
-                EditorApplication.Beep();
+        ToggleGUI(false);
+        ChangeButtonStates(false);
 
-            return;
-        }
-
-        if (warningValue)
+        if (MegaPintAutoSaveData.WarningValue)
             EditorApplication.Beep();
     }
 
-    private void UpdateGUI()
+    private void ToggleGUI(bool active)
+    {
+        if (active)
+            UpdateGUI(true);
+
+        _lastSave.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
+        _nextSave.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
+        _nextSaveProgress.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
+    }
+
+    private void UpdateGUI(bool forceUpdateNextSave = false)
     {
         var intervalValue = MegaPintAutoSaveData.IntervalValue;
 
@@ -195,6 +199,9 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
             _lastSave.text = DateTime.Now.ToString("HH:mm:ss");
             _nextSave.text = DateTime.Now.AddSeconds(intervalValue).ToString("HH:mm:ss");
         }
+
+        if (forceUpdateNextSave)
+            _nextSave.text = DateTime.Now.AddSeconds(intervalValue).ToString("HH:mm:ss");
 
         _nextSaveProgress.highValue = intervalValue;
         _nextSaveProgress.value = _currentSecond;
@@ -231,7 +238,9 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
     /// <summary> Reference to the label displaying the current interval </summary>
     private Label _interval;
 
-    private Button _btnSettings;
+    private Button _btnPlay;
+
+    private Button _btnStop;
 
     #endregion
 
@@ -243,6 +252,8 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
     private int _currentSecond;
 
     private bool _breakTimer;
+
+    private bool _stopTimer;
 
     #endregion
 }
