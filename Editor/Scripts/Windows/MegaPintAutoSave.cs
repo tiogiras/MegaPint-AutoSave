@@ -52,8 +52,6 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
         _lastSave = content.Q <Label>("LastSave");
         _interval = content.Q <Label>("Interval");
 
-        _btnSettings = content.Q <Button>("Settings");
-
         #endregion
 
         RegisterCallbacks();
@@ -85,28 +83,20 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
     protected override void RegisterCallbacks()
     {
         EditorApplication.playModeStateChanged += OnPlayModeChange;
-        _btnSettings.clicked += OnOpenAutoSaveSettings;
+
+        MegaPintAutoSaveData.onSettingsChanged += UpdateStaticGUI;
     }
 
     protected override void UnRegisterCallbacks()
     {
         EditorApplication.playModeStateChanged -= OnPlayModeChange;
-        _btnSettings.clicked -= OnOpenAutoSaveSettings;
+        
+        MegaPintAutoSaveData.onSettingsChanged -= UpdateStaticGUI;
     }
 
     #endregion
 
     #region Private Methods
-
-    private void OnOpenAutoSaveSettings()
-    {
-        MegaPintEditorWindowBase window = ContextMenu.TryOpen <MegaPintAutoSaveSettings>(true, "AutoSave Settings");
-
-        if (window == null)
-            return;
-
-        window.onClose += OnSettingsWindowClosed;
-    }
 
     private void OnPlayModeChange(PlayModeStateChange state)
     {
@@ -129,22 +119,6 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
 
                 break;
         }
-    }
-
-    private void OnSettingsWindowClosed(MegaPintEditorWindowBase window)
-    {
-        LoadSettings();
-        _currentSecond = 0;
-
-        var intervalValue = MegaPintAutoSaveData.IntervalValue;
-
-        _nextSaveProgress.highValue = intervalValue;
-        _interval.text = $"{intervalValue} Seconds";
-
-        UpdateGUI();
-        UpdateStaticGUI();
-
-        window.onClose -= OnSettingsWindowClosed;
     }
 
     private void Save()
@@ -230,8 +204,6 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
 
     /// <summary> Reference to the label displaying the current interval </summary>
     private Label _interval;
-
-    private Button _btnSettings;
 
     #endregion
 

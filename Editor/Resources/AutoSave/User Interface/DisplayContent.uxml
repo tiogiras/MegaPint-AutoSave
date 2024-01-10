@@ -4,8 +4,6 @@
     <ui:GroupBox name="Tabs" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; background-color: rgb(37, 37, 37); overflow: hidden;">
         <ui:Button text="Info" display-tooltip-when-elided="true" name="Tab0" class="megapint-button" style="top: 2px; background-color: rgb(49, 49, 49); margin-left: 10px; margin-right: 1px;" />
         <ui:Button text="Settings" display-tooltip-when-elided="true" name="Tab1" class="megapint-button" style="top: 2px; margin-left: 1px; margin-right: 1px;" />
-        <ui:Button text="Settings(Scenes)" display-tooltip-when-elided="true" name="Tab2" class="megapint-button" style="top: 2px; margin-left: 1px; margin-right: 1px;" />
-        <ui:Button text="Help" display-tooltip-when-elided="true" name="Tab3" class="megapint-button" style="top: 2px; margin-left: 1px; margin-right: 1px;" />
     </ui:GroupBox>
     <ui:GroupBox name="TabContent" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-grow: 1;" />
 </ui:UXML>
