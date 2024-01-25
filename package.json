@@ -1,13 +1,9 @@
 {
   "name": "com.tiogiras.megapint-autosave",
-  "displayName": "megapint-autosave",
-  "version": "1.0.0",
+  "displayName": "Megapint - Scene-AutoSave",
+  "author": "Tiogiras",
+  "version": "1.0.1",
   "unity": "2022.3",
-  "keywords": [
-    "2d",
-    "sprite",
-    "sprite editor window"
-  ],
-  "category": "2D",
+  "category": "Tools",
   "description": "MegaPint package for scene autosave function"
 }
