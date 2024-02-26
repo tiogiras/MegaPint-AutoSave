@@ -11,10 +11,13 @@ using UnityEngine.UIElements;
 namespace Editor.Scripts.Windows
 {
 
-public class MegaPintAutoSave : MegaPintEditorWindowBase
+/// <summary> Window based on the <see cref="MegaPintEditorWindowBase" /> to display and handle the autoSave </summary>
+internal class MegaPintAutoSave : MegaPintEditorWindowBase
 {
     #region Public Methods
 
+    /// <summary> Show the window </summary>
+    /// <returns> Window instance </returns>
     public override MegaPintEditorWindowBase ShowWindow()
     {
         minSize = new Vector2(300, 90);
@@ -236,22 +239,16 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
 
     #region Visual References
 
-    /// <summary> Reference to the progressbar displaying _currentSecond </summary>
     private ProgressBar _nextSaveProgress;
 
-    /// <summary> Reference to the playMode group </summary>
     private GroupBox _playMode;
 
-    /// <summary> Reference to the editMode group </summary>
     private GroupBox _editMode;
 
-    /// <summary> Reference to the label displaying the time of the next save </summary>
     private Label _nextSave;
 
-    /// <summary> Reference to the label displaying the time of the last save </summary>
     private Label _lastSave;
 
-    /// <summary> Reference to the label displaying the current interval </summary>
     private Label _interval;
 
     private Button _btnPlay;
@@ -262,7 +259,6 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
 
     #region Private
 
-    /// <summary> Loaded reference of the uxml </summary>
     private VisualTreeAsset _baseWindow;
 
     private int _currentSecond;
