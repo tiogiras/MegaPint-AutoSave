@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -110,17 +111,32 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
 
     #region Private Methods
 
+    private static IEnumerable <Scene> GetAllScenes()
+    {
+        var countLoaded = SceneManager.sceneCount;
+
+        Scene[] loadedScenes = new Scene[countLoaded];
+
+        for (var i = 0; i < countLoaded; i++)
+            loadedScenes[i] = SceneManager.GetSceneAt(i);
+
+        return loadedScenes;
+    }
+
     private static void Save()
     {
         var saveModeValue = MegaPintAutoSaveData.SaveModeValue;
 
-        Scene scene = SceneManager.GetActiveScene();
+        IEnumerable <Scene> scenes = GetAllScenes();
 
-        var destination = saveModeValue == 0
-            ? scene.path
-            : $"{MegaPintAutoSaveData.DuplicatePathValue}/{scene.name} ({DateTime.Today:MM.dd.yy})({DateTime.Now:HH.mm.ss}).unity";
+        foreach (Scene scene in scenes)
+        {
+            var destination = saveModeValue == 0
+                ? scene.path
+                : $"{MegaPintAutoSaveData.DuplicatePathValue}/{scene.name} ({DateTime.Today:MM.dd.yy})({DateTime.Now:HH.mm.ss}).unity";
 
-        EditorSceneManager.SaveScene(scene, destination, saveModeValue == 1);
+            EditorSceneManager.SaveScene(scene, destination, saveModeValue == 1);
+        }
     }
 
     private void ChangeButtonStates(bool active)
