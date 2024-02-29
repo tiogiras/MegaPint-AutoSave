@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -10,10 +11,13 @@ using UnityEngine.UIElements;
 namespace Editor.Scripts.Windows
 {
 
-public class MegaPintAutoSave : MegaPintEditorWindowBase
+/// <summary> Window based on the <see cref="MegaPintEditorWindowBase" /> to display and handle the autoSave </summary>
+internal class MegaPintAutoSave : MegaPintEditorWindowBase
 {
     #region Public Methods
 
+    /// <summary> Show the window </summary>
+    /// <returns> Window instance </returns>
     public override MegaPintEditorWindowBase ShowWindow()
     {
         minSize = new Vector2(300, 90);
@@ -110,17 +114,32 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
 
     #region Private Methods
 
+    private static IEnumerable <Scene> GetAllScenes()
+    {
+        var countLoaded = SceneManager.sceneCount;
+
+        Scene[] loadedScenes = new Scene[countLoaded];
+
+        for (var i = 0; i < countLoaded; i++)
+            loadedScenes[i] = SceneManager.GetSceneAt(i);
+
+        return loadedScenes;
+    }
+
     private static void Save()
     {
         var saveModeValue = MegaPintAutoSaveData.SaveModeValue;
 
-        Scene scene = SceneManager.GetActiveScene();
+        IEnumerable <Scene> scenes = GetAllScenes();
 
-        var destination = saveModeValue == 0
-            ? scene.path
-            : $"{MegaPintAutoSaveData.DuplicatePathValue}/{scene.name} ({DateTime.Today:MM.dd.yy})({DateTime.Now:HH.mm.ss}).unity";
+        foreach (Scene scene in scenes)
+        {
+            var destination = saveModeValue == 0
+                ? scene.path
+                : $"{MegaPintAutoSaveData.DuplicatePathValue}/{scene.name} ({DateTime.Today:MM.dd.yy})({DateTime.Now:HH.mm.ss}).unity";
 
-        EditorSceneManager.SaveScene(scene, destination, saveModeValue == 1);
+            EditorSceneManager.SaveScene(scene, destination, saveModeValue == 1);
+        }
     }
 
     private void ChangeButtonStates(bool active)
@@ -220,22 +239,16 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
 
     #region Visual References
 
-    /// <summary> Reference to the progressbar displaying _currentSecond </summary>
     private ProgressBar _nextSaveProgress;
 
-    /// <summary> Reference to the playMode group </summary>
     private GroupBox _playMode;
 
-    /// <summary> Reference to the editMode group </summary>
     private GroupBox _editMode;
 
-    /// <summary> Reference to the label displaying the time of the next save </summary>
     private Label _nextSave;
 
-    /// <summary> Reference to the label displaying the time of the last save </summary>
     private Label _lastSave;
 
-    /// <summary> Reference to the label displaying the current interval </summary>
     private Label _interval;
 
     private Button _btnPlay;
@@ -246,7 +259,6 @@ public class MegaPintAutoSave : MegaPintEditorWindowBase
 
     #region Private
 
-    /// <summary> Loaded reference of the uxml </summary>
     private VisualTreeAsset _baseWindow;
 
     private int _currentSecond;
