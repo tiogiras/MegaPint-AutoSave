@@ -5,33 +5,44 @@ using Editor.Scripts.Windows;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using GUIUtility = Editor.Scripts.GUI.GUIUtility;
 
 namespace Editor.Scripts
 {
 
 internal static partial class DisplayContent
 {
-    private const string BasePathAutoSave = "AutoSave/User Interface/Display Content Tabs/";
-
-    #region Private Methods
-
     // Called by reflection
     // ReSharper disable once UnusedMember.Local
-    private static void AutoSave(VisualElement root)
+    private static void AutoSave(DisplayContentReferences refs)
     {
-        var tabs = root.Q <GroupBox>("Tabs");
-        var tabContentParent = root.Q <GroupBox>("TabContent");
-
-        RegisterTabCallbacks(tabs, tabContentParent, 2);
-
-        SetTabContentLocations(BasePathAutoSave + "Tab0", BasePathAutoSave + "Tab1");
-
-        s_onSelectedTabChanged += OnTabChangedAutoSave;
-        s_onSelectedPackageChanged += UnsubscribeAutoSave;
-
-        SwitchTab(tabContentParent, 0);
+        InitializeDisplayContent(
+            refs,
+            new TabSettings
+            {
+                info = true,
+                settings = true
+            },
+            new TabActions
+            {
+                info = root =>
+                {
+                    GUIUtility.ActivateLinks(root,
+                                             link =>
+                                             {
+                                                 switch (link.linkID)
+                                                 {
+                                                     case "autosave":
+                                                         EditorApplication.ExecuteMenuItem(
+                                                             link.linkText);
+                                                         break;
+                                                 }
+                                             });
+                },
+                settings = AutoSaveSettingsTab
+            });
     }
-
+    
     private static void AutoSavePathChange(Label pathLabel, VisualElement btnSave)
     {
         var oldValue = MegaPintAutoSaveData.DuplicatePathValue;
@@ -58,7 +69,7 @@ internal static partial class DisplayContent
         if (!path.Equals(oldValue))
             btnSave.style.display = DisplayStyle.Flex;
     }
-
+    
     private static void AutoSavePathVisuals(Label path)
     {
         var duplicatePathValue = MegaPintAutoSaveData.DuplicatePathValue;
@@ -86,13 +97,7 @@ internal static partial class DisplayContent
         path.tooltip = duplicatePathValue;
     }
 
-    private static void AutoSaveTab0(VisualElement root)
-    {
-        root.Q <Button>("BTN_Open").clickable = new Clickable(
-            _ => {ContextMenu.TryOpen <MegaPintAutoSave>(false);});
-    }
-
-    private static void AutoSaveTab1(VisualElement root)
+    private static void AutoSaveSettingsTab(VisualElement root)
     {
         #region Collect References
 
@@ -167,30 +172,6 @@ internal static partial class DisplayContent
 
         #endregion
     }
-
-    private static void OnTabChangedAutoSave(int tab, VisualElement root)
-    {
-        switch (tab)
-        {
-            case 0:
-                AutoSaveTab0(root);
-
-                break;
-
-            case 1:
-                AutoSaveTab1(root);
-
-                break;
-        }
-    }
-
-    private static void UnsubscribeAutoSave()
-    {
-        s_onSelectedTabChanged -= OnTabChangedAutoSave;
-        s_onSelectedPackageChanged -= UnsubscribeAutoSave;
-    }
-
-    #endregion
 }
 
 }

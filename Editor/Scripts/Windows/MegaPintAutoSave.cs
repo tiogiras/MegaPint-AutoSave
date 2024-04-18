@@ -7,6 +7,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using GUIUtility = Editor.Scripts.GUI.GUIUtility;
 
 namespace Editor.Scripts.Windows
 {
@@ -34,7 +35,7 @@ internal class MegaPintAutoSave : MegaPintEditorWindowBase
 
     protected override string BasePath()
     {
-        return "AutoSave/User Interface/MegaPintAutoSave";
+        return "AutoSave/User Interface/AutoSave";
     }
 
     protected override void CreateGUI()
@@ -43,7 +44,7 @@ internal class MegaPintAutoSave : MegaPintEditorWindowBase
 
         VisualElement root = rootVisualElement;
 
-        VisualElement content = _baseWindow.Instantiate();
+        VisualElement content = GUIUtility.Instantiate(_baseWindow, root);
 
         #region References
 
@@ -76,8 +77,6 @@ internal class MegaPintAutoSave : MegaPintEditorWindowBase
             _editMode.style.display = DisplayStyle.Flex;
             Task _ = Timer();
         }
-
-        root.Add(content);
     }
 
     protected override bool LoadResources()
