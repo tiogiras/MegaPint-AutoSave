@@ -2,8 +2,8 @@
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
     <ui:GroupBox name="EditMode" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
         <ui:GroupBox style="margin-top: 5px; margin-right: 0; margin-bottom: 0; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row;">
-            <Editor.Scripts.GUI.Factories.Interactive.Button name="BTN_Play" class="mp_imageTint_primary" style="background-image: resource(&apos;AutoSave/Images/Play Icon&apos;); width: 15px; height: 15px;" />
-            <Editor.Scripts.GUI.Factories.Interactive.Button name="BTN_Stop" class="mp_imageTint_primary" style="background-image: resource(&apos;AutoSave/Images/Stop Icon&apos;); width: 15px; height: 15px;" />
+            <Editor.Scripts.GUI.Factories.Interactive.Button name="BTN_Play" display-tooltip-when-elided="true" tooltip="Start the autosave" class="mp_imageTint_primary" style="background-image: resource(&apos;AutoSave/Images/Play Icon&apos;); width: 15px; height: 15px;" />
+            <Editor.Scripts.GUI.Factories.Interactive.Button name="BTN_Stop" tooltip="Stop the autosave" display-tooltip-when-elided="true" class="mp_imageTint_primary" style="background-image: resource(&apos;AutoSave/Images/Stop Icon&apos;); width: 15px; height: 15px;" />
         </ui:GroupBox>
         <ui:GroupBox style="align-items: center; flex-direction: row; justify-content: space-between; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
             <ui:GroupBox style="margin-left: 5px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; justify-content: flex-start; align-items: center; height: 15px;">

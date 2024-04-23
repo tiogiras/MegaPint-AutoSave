@@ -49,6 +49,9 @@ internal static partial class DisplayContent
 
         var path = EditorUtility.OpenFolderPanel("Set folder for duplicates", "Assets/", "");
 
+        if (string.IsNullOrEmpty(path))
+            return;
+        
         if (!path.StartsWith(Application.dataPath))
         {
             EditorUtility.DisplayDialog(
