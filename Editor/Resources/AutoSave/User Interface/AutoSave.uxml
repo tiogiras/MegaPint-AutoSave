@@ -1,0 +1,27 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
+    <ui:GroupBox name="EditMode" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
+        <ui:GroupBox style="margin-top: 5px; margin-right: 0; margin-bottom: 0; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row;">
+            <Editor.Scripts.GUI.Factories.Interactive.Button name="BTN_Play" display-tooltip-when-elided="true" tooltip="Start the autosave" class="mp_imageTint_primary" style="background-image: resource(&apos;AutoSave/Images/Play Icon&apos;); width: 15px; height: 15px;" />
+            <Editor.Scripts.GUI.Factories.Interactive.Button name="BTN_Stop" tooltip="Stop the autosave" display-tooltip-when-elided="true" class="mp_imageTint_primary" style="background-image: resource(&apos;AutoSave/Images/Stop Icon&apos;); width: 15px; height: 15px;" />
+        </ui:GroupBox>
+        <ui:GroupBox style="align-items: center; flex-direction: row; justify-content: space-between; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
+            <ui:GroupBox style="margin-left: 5px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; justify-content: flex-start; align-items: center; height: 15px;">
+                <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="Next save:" style="width: 125px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; white-space: normal; -unity-text-align: middle-left;" />
+                <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="00:00:00" name="NextSave" style="-unity-text-align: middle-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-right: 10px;" />
+                <ui:ProgressBar value="50" name="NextSaveProgress" style="width: 50px; height: 10px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+            </ui:GroupBox>
+        </ui:GroupBox>
+        <ui:GroupBox style="margin-left: 5px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; justify-content: flex-start; align-items: center; height: 15px;">
+            <Editor.Scripts.GUI.Factories.TextSecondary tabindex="-1" text="Last save:" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; white-space: normal; -unity-text-align: middle-left; width: 125px;" />
+            <Editor.Scripts.GUI.Factories.TextSecondary tabindex="-1" name="LastSave" style="-unity-text-align: middle-left; white-space: normal; margin-right: 10px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+        </ui:GroupBox>
+        <ui:GroupBox style="margin-left: 5px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; justify-content: flex-start; align-items: center; height: 15px;">
+            <Editor.Scripts.GUI.Factories.TextSecondary tabindex="-1" text="Save interval:" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; white-space: normal; -unity-text-align: middle-left; width: 125px;" />
+            <Editor.Scripts.GUI.Factories.TextSecondary tabindex="-1" name="Interval" text="00 Sec" style="-unity-text-align: middle-left; white-space: normal; margin-right: 10px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+        </ui:GroupBox>
+    </ui:GroupBox>
+    <ui:GroupBox name="PlayMode" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
+        <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="Paused in EditMode" style="margin-top: 20px; margin-right: 20px; margin-bottom: 20px; margin-left: 20px; white-space: normal; -unity-text-align: middle-center;" />
+    </ui:GroupBox>
+</ui:UXML>
