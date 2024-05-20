@@ -45,6 +45,8 @@ internal class MegaPintAutoSave : MegaPintEditorWindowBase
         VisualElement root = rootVisualElement;
 
         VisualElement content = GUIUtility.Instantiate(_baseWindow, root);
+        content.style.flexGrow = 1f;
+        content.style.flexShrink = 1f;
 
         #region References
 

@@ -14,6 +14,7 @@ internal static partial class DisplayContent
 {
     // Called by reflection
     // ReSharper disable once UnusedMember.Local
+    
     private static void AutoSave(DisplayContentReferences refs)
     {
         InitializeDisplayContent(

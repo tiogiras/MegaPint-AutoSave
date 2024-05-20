@@ -1,21 +1,25 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
-    <ui:VisualElement style="flex-grow: 0; margin-top: 15px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;">
-        <uie:IntegerField label="Interval" value="30" name="Interval" tooltip="The interval in which the autosave saves the scene (in seconds)" focusable="true" class="mp_font mp_textColor_normal mp_inputField" style="flex-shrink: 1;" />
-        <ui:DropdownField label="Save Mode" index="0" choices="Save As Current, Save As Duplicate" name="SaveMode" tooltip="The mode in which the scene will be saved" focusable="true" class="mp_font mp_textColor_normal mp_dropdown" style="flex-shrink: 1; flex-grow: 1;" />
-        <ui:GroupBox name="DuplicatePath" style="margin-top: 1px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; align-items: center; margin-left: 30px; height: 18px; flex-shrink: 1;">
-            <Editor.Scripts.GUI.Factories.Interactive.Button text="Change" name="BTN_Change" display-tooltip-when-elided="true" tooltip="Change the target folder for duplicates" />
-            <Editor.Scripts.GUI.Factories.TextSecondary tabindex="-1" text="Assets/.../FolderName(max 20)" name="Path" style="margin-left: 5px;" />
-        </ui:GroupBox>
-        <ui:Toggle label="Warning on exit" name="Warning" tooltip="When set active, the autosave will alert if closed" class="mp_font mp_textColor_normal mp_toggle" style="flex-shrink: 1;" />
-        <ui:VisualElement style="flex-grow: 1; flex-direction: row-reverse;">
-            <Editor.Scripts.GUI.Factories.Interactive.Button text="Save" name="BTN_Save" display-tooltip-when-elided="true" tooltip="Save the changed settings" />
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPintUnityElements.uss?fileID=7433441132597879392&amp;guid=14475de81743442dad8e397f39ea6ace&amp;type=3#MegaPintUnityElements" />
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPintAttributes.uss?fileID=7433441132597879392&amp;guid=db4b42bc58d645b8ab6f8c0e914c2a0c&amp;type=3#MegaPintAttributes" />
+    <Editor.Scripts.GUI.Factories.RootElement>
+        <ui:VisualElement style="flex-grow: 0; margin-top: 15px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;">
+            <uie:IntegerField label="Interval" value="30" name="Interval" tooltip="The interval in which the autosave saves the scene (in seconds)" focusable="true" style="flex-shrink: 1;" />
+            <ui:DropdownField label="Save Mode" index="0" choices="Save As Current,Save As Duplicate" name="SaveMode" tooltip="The mode in which the scene will be saved" />
+            <ui:GroupBox name="DuplicatePath" style="margin-top: 1px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; align-items: center; margin-left: 30px; height: 18px; flex-shrink: 1;">
+                <ui:Button text="Change" parse-escape-sequences="true" display-tooltip-when-elided="true" tooltip="Change the target folder for duplicates" name="BTN_Change" />
+                <Editor.Scripts.GUI.Factories.TextElements.TextSecondary tabindex="-1" name="Path" text="Assets/.../FolderName(max 20)" style="margin-left: 5px; white-space: normal;" />
+            </ui:GroupBox>
+            <ui:Toggle label="Warning on exit" name="Warning" tooltip="When set active, the autosave will alert if closed" style="flex-shrink: 1;" />
+            <ui:VisualElement style="flex-grow: 1; flex-direction: row-reverse;">
+                <ui:Button text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Save" tooltip="Save the changed settings" />
+            </ui:VisualElement>
+            <Editor.Scripts.GUI.Factories.Structure.Separator />
+            <Editor.Scripts.GUI.Factories.Headings.HeadingPrimary tabindex="-1" text="Save Modes" style="margin-top: 10px; white-space: normal; -unity-font-style: bold;" />
+            <Editor.Scripts.GUI.Factories.Headings.HeadingSecondary tabindex="-1" text="Save As Current" style="white-space: normal; -unity-font-style: bold; margin-top: 10px; margin-left: 15px;" />
+            <Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="All currently opened scenes are saved the same way the shortcut [ctrl + s] would do." style="white-space: normal; margin-left: 15px;" />
+            <Editor.Scripts.GUI.Factories.Headings.HeadingSecondary tabindex="-1" text="Save As Duplicate" style="white-space: normal; -unity-font-style: bold; margin-top: 10px; margin-left: 15px;" />
+            <Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="A backup of the opened scene is created in the designated folder." style="white-space: normal; margin-left: 15px;" />
         </ui:VisualElement>
-        <Editor.Scripts.GUI.Factories.Separator />
-        <Editor.Scripts.GUI.Factories.Headings.MpHeading2 tabindex="-1" text="Save Modes" style="white-space: normal; -unity-font-style: bold; margin-top: 10px;" />
-        <Editor.Scripts.GUI.Factories.Headings.MpHeading3 tabindex="-1" text="Save As Current" style="margin-top: 10px; margin-left: 15px; -unity-font-style: bold; white-space: normal;" />
-        <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="All currently opened scenes are saved the same way the shortcut [ctrl + s] would do." style="margin-left: 15px; white-space: normal;" />
-        <Editor.Scripts.GUI.Factories.Headings.MpHeading3 tabindex="-1" text="Save As Duplicate" style="margin-top: 10px; margin-left: 15px; -unity-font-style: bold; white-space: normal;" />
-        <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="A backup of the opened scene is created in the designated folder." style="margin-left: 15px; white-space: normal;" />
-    </ui:VisualElement>
+    </Editor.Scripts.GUI.Factories.RootElement>
 </ui:UXML>
