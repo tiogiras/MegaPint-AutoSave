@@ -1,8 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
-    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
-    <ui:GroupBox style="margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
-        <Editor.Scripts.GUI.Factories.TextSecondary tabindex="-1" name="PackageInfo" text="Package Info" style="-unity-font-style: italic; white-space: normal;" />
-        <Editor.Scripts.GUI.Factories.Separator Space="1.5" />
-        <Editor.Scripts.GUI.Factories.Text tabindex="-1" text="This package works via an editor window. This window must be open in order for the autosave feature to work. You can dock the window to your editor and have it opened in the background, it does not need to be focused.&#10;&#10;You can access the window via &lt;link=&quot;autosave&quot;&gt;MegaPint/Packages/AutoSave&lt;/link&gt; or your chosen &lt;link=&quot;info_shortcut&quot;&gt;shortcut&lt;/link&gt;.&#10;&#10;Use the settings tab to configure the package to your needs." class="mp_link" style="white-space: normal; margin-top: 20px;" />
-    </ui:GroupBox>
-</ui:UXML>
