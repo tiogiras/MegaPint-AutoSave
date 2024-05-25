@@ -1,8 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPint.uss?fileID=7433441132597879392&amp;guid=54dba4b7e58379b46a03a9a47e130e51&amp;type=3#MegaPint" />
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPintUnityElements.uss?fileID=7433441132597879392&amp;guid=14475de81743442dad8e397f39ea6ace&amp;type=3#MegaPintUnityElements" />
-    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPintAttributes.uss?fileID=7433441132597879392&amp;guid=db4b42bc58d645b8ab6f8c0e914c2a0c&amp;type=3#MegaPintAttributes" />    <Editor.Scripts.GUI.Factories.RootElement style="flex-grow: 1;">
-        <Editor.Scripts.GUI.Factories.Backgrounds.BackgroundTertiary style="flex-grow: 1;">
+    <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPintAttributes.uss?fileID=7433441132597879392&amp;guid=db4b42bc58d645b8ab6f8c0e914c2a0c&amp;type=3#MegaPintAttributes" />    <MegaPint.Editor.Scripts.GUI.Factories.RootElement style="flex-grow: 1;">
+        <MegaPint.Editor.Scripts.GUI.Factories.Backgrounds.BackgroundTertiary style="flex-grow: 1;">
             <ui:GroupBox name="EditMode" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
                 <ui:GroupBox style="margin-top: 5px; margin-right: 0; margin-bottom: 0; margin-left: 5px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row;">
                     <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" tooltip="Start the autosave" name="BTN_Play" style="width: 15px; height: 15px; background-image: resource(&apos;AutoSave/Images/Play Icon&apos;);" />
@@ -10,23 +10,23 @@
                 </ui:GroupBox>
                 <ui:GroupBox style="align-items: center; flex-direction: row; justify-content: space-between; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
                     <ui:GroupBox style="margin-left: 5px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; justify-content: flex-start; align-items: center; height: 15px;">
-                        <Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="Next save:" style="width: 125px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; white-space: normal; -unity-text-align: middle-left;" />
-                        <Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="00:00:00" name="NextSave" style="-unity-text-align: middle-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-right: 10px; white-space: normal;" />
+                        <MegaPint.Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="Next save:" style="width: 125px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; white-space: normal; -unity-text-align: middle-left;" />
+                        <MegaPint.Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="00:00:00" name="NextSave" style="-unity-text-align: middle-left; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-right: 10px; white-space: normal;" />
                         <ui:ProgressBar value="50" name="NextSaveProgress" style="width: 50px; height: 10px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
                     </ui:GroupBox>
                 </ui:GroupBox>
                 <ui:GroupBox style="margin-left: 5px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; justify-content: flex-start; align-items: center; height: 15px;">
-                    <Editor.Scripts.GUI.Factories.TextElements.TextSecondary tabindex="-1" text="Last save:" style="width: 125px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; white-space: normal; -unity-text-align: middle-left;" />
-                    <Editor.Scripts.GUI.Factories.TextElements.TextSecondary tabindex="-1" name="LastSave" style="-unity-text-align: middle-left; white-space: normal; margin-right: 10px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                    <MegaPint.Editor.Scripts.GUI.Factories.TextElements.TextSecondary tabindex="-1" text="Last save:" style="width: 125px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; white-space: normal; -unity-text-align: middle-left;" />
+                    <MegaPint.Editor.Scripts.GUI.Factories.TextElements.TextSecondary tabindex="-1" name="LastSave" style="-unity-text-align: middle-left; white-space: normal; margin-right: 10px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                 </ui:GroupBox>
                 <ui:GroupBox style="margin-left: 5px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; justify-content: flex-start; align-items: center; height: 15px;">
-                    <Editor.Scripts.GUI.Factories.TextElements.TextSecondary tabindex="-1" text="Save interval:" style="width: 125px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; white-space: normal; -unity-text-align: middle-left;" />
-                    <Editor.Scripts.GUI.Factories.TextElements.TextSecondary tabindex="-1" name="Interval" text="00 Sec" style="-unity-text-align: middle-left; white-space: normal; margin-right: 10px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                    <MegaPint.Editor.Scripts.GUI.Factories.TextElements.TextSecondary tabindex="-1" text="Save interval:" style="width: 125px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; white-space: normal; -unity-text-align: middle-left;" />
+                    <MegaPint.Editor.Scripts.GUI.Factories.TextElements.TextSecondary tabindex="-1" name="Interval" text="00 Sec" style="-unity-text-align: middle-left; white-space: normal; margin-right: 10px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
                 </ui:GroupBox>
             </ui:GroupBox>
             <ui:GroupBox name="PlayMode" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
-                <Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="Paused in EditMode" style="margin-top: 20px; margin-right: 20px; margin-bottom: 20px; margin-left: 20px; white-space: normal; -unity-text-align: upper-center;" />
+                <MegaPint.Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="Paused in EditMode" style="margin-top: 20px; margin-right: 20px; margin-bottom: 20px; margin-left: 20px; white-space: normal; -unity-text-align: upper-center;" />
             </ui:GroupBox>
-        </Editor.Scripts.GUI.Factories.Backgrounds.BackgroundTertiary>
-    </Editor.Scripts.GUI.Factories.RootElement>
+        </MegaPint.Editor.Scripts.GUI.Factories.Backgrounds.BackgroundTertiary>
+    </MegaPint.Editor.Scripts.GUI.Factories.RootElement>
 </ui:UXML>

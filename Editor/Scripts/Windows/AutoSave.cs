@@ -1,25 +1,50 @@
 #if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
-using GUIUtility = Editor.Scripts.GUI.GUIUtility;
+using GUIUtility = MegaPint.Editor.Scripts.GUI.Utility.GUIUtility;
 
-namespace Editor.Scripts.Windows
+namespace MegaPint.Editor.Scripts.Windows
 {
 
-/// <summary> Window based on the <see cref="MegaPintEditorWindowBase" /> to display and handle the autoSave </summary>
-internal class MegaPintAutoSave : MegaPintEditorWindowBase
+/// <summary> Window based on the <see cref="EditorWindowBase" /> to display and handle the autoSave </summary>
+internal class AutoSave : EditorWindowBase
 {
+    private VisualTreeAsset _baseWindow;
+
+    private bool _breakTimer;
+
+    private Button _btnPlay;
+
+    private Button _btnStop;
+
+    private int _currentSecond;
+
+    private GroupBox _editMode;
+
+    private Label _interval;
+
+    private Label _lastSave;
+
+    private Label _nextSave;
+
+    private ProgressBar _nextSaveProgress;
+
+    private GroupBox _playMode;
+
+    private bool _stopTimer;
+
     #region Public Methods
 
     /// <summary> Show the window </summary>
     /// <returns> Window instance </returns>
-    public override MegaPintEditorWindowBase ShowWindow()
+    public override EditorWindowBase ShowWindow()
     {
         minSize = new Vector2(300, 90);
         maxSize = new Vector2(300, 90);
@@ -35,7 +60,7 @@ internal class MegaPintAutoSave : MegaPintEditorWindowBase
 
     protected override string BasePath()
     {
-        return "AutoSave/User Interface/AutoSave";
+        return Path.Combine(Constants.AutoSave.Resources.UserInterface.WindowsPath, "AutoSave");
     }
 
     protected override void CreateGUI()
@@ -92,7 +117,7 @@ internal class MegaPintAutoSave : MegaPintEditorWindowBase
     {
         EditorApplication.playModeStateChanged += OnPlayModeChange;
 
-        MegaPintAutoSaveData.onSettingsChanged += UpdateStaticGUI;
+        SaveValues.AutoSave.onSettingsChanged += UpdateStaticGUI;
 
 #pragma warning disable CS4014
         _btnPlay.clickable = new Clickable(_ => {Timer();});
@@ -105,7 +130,7 @@ internal class MegaPintAutoSave : MegaPintEditorWindowBase
     {
         EditorApplication.playModeStateChanged -= OnPlayModeChange;
 
-        MegaPintAutoSaveData.onSettingsChanged -= UpdateStaticGUI;
+        SaveValues.AutoSave.onSettingsChanged -= UpdateStaticGUI;
 
         _btnPlay.clickable = null;
         _btnStop.clickable = null;
@@ -115,6 +140,8 @@ internal class MegaPintAutoSave : MegaPintEditorWindowBase
 
     #region Private Methods
 
+    /// <summary> Get all currently opened scenes </summary>
+    /// <returns> All collected scenes </returns>
     private static IEnumerable <Scene> GetAllScenes()
     {
         var countLoaded = SceneManager.sceneCount;
@@ -127,9 +154,10 @@ internal class MegaPintAutoSave : MegaPintEditorWindowBase
         return loadedScenes;
     }
 
+    /// <summary> Save the opened scenes </summary>
     private static void Save()
     {
-        var saveModeValue = MegaPintAutoSaveData.SaveModeValue;
+        var saveModeValue = SaveValues.AutoSave.SaveMode;
 
         IEnumerable <Scene> scenes = GetAllScenes();
 
@@ -137,12 +165,14 @@ internal class MegaPintAutoSave : MegaPintEditorWindowBase
         {
             var destination = saveModeValue == 0
                 ? scene.path
-                : $"{MegaPintAutoSaveData.DuplicatePathValue}/{scene.name} ({DateTime.Today:MM.dd.yy})({DateTime.Now:HH.mm.ss}).unity";
+                : $"{SaveValues.AutoSave.DuplicatePath}/{scene.name} ({DateTime.Today:MM.dd.yy})({DateTime.Now:HH.mm.ss}).unity";
 
             EditorSceneManager.SaveScene(scene, destination, saveModeValue == 1);
         }
     }
 
+    /// <summary> Change the button styles based on the current active state </summary>
+    /// <param name="active"> If the autoSave feature is active </param>
     private void ChangeButtonStates(bool active)
     {
         _btnPlay.style.opacity = active ? .5f : 1f;
@@ -152,6 +182,8 @@ internal class MegaPintAutoSave : MegaPintEditorWindowBase
         _btnStop.focusable = active;
     }
 
+    /// <summary> Callback for when the editor changes playmode </summary>
+    /// <param name="state"> New playmode </param>
     private void OnPlayModeChange(PlayModeStateChange state)
     {
         switch (state)
@@ -175,6 +207,7 @@ internal class MegaPintAutoSave : MegaPintEditorWindowBase
         }
     }
 
+    /// <summary> Timer method for the autoSave feature </summary>
     private async Task Timer()
     {
         ToggleGUI(true);
@@ -194,10 +227,12 @@ internal class MegaPintAutoSave : MegaPintEditorWindowBase
         ToggleGUI(false);
         ChangeButtonStates(false);
 
-        if (MegaPintAutoSaveData.WarningValue)
+        if (SaveValues.AutoSave.Warning)
             EditorApplication.Beep();
     }
 
+    /// <summary> Toggle specific parts GUI </summary>
+    /// <param name="active"> Active state of the ui parts </param>
     private void ToggleGUI(bool active)
     {
         if (active)
@@ -208,9 +243,11 @@ internal class MegaPintAutoSave : MegaPintEditorWindowBase
         _nextSaveProgress.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
     }
 
+    /// <summary> Update the gui </summary>
+    /// <param name="forceUpdateNextSave"> Forces the gui to update after the next auto save </param>
     private void UpdateGUI(bool forceUpdateNextSave = false)
     {
-        var intervalValue = MegaPintAutoSaveData.IntervalValue;
+        var intervalValue = SaveValues.AutoSave.Interval;
 
         if (_currentSecond >= intervalValue)
         {
@@ -227,46 +264,15 @@ internal class MegaPintAutoSave : MegaPintEditorWindowBase
         _nextSaveProgress.value = _currentSecond;
     }
 
+    /// <summary> Update all static gui parts </summary>
     private void UpdateStaticGUI()
     {
-        var intervalValue = MegaPintAutoSaveData.IntervalValue;
+        var intervalValue = SaveValues.AutoSave.Interval;
 
         _nextSave.text = DateTime.Now.AddSeconds(intervalValue).ToString("HH:mm:ss");
         _nextSaveProgress.highValue = intervalValue;
         _interval.text = $"{intervalValue} Seconds";
     }
-
-    #endregion
-
-    #region Visual References
-
-    private ProgressBar _nextSaveProgress;
-
-    private GroupBox _playMode;
-
-    private GroupBox _editMode;
-
-    private Label _nextSave;
-
-    private Label _lastSave;
-
-    private Label _interval;
-
-    private Button _btnPlay;
-
-    private Button _btnStop;
-
-    #endregion
-
-    #region Private
-
-    private VisualTreeAsset _baseWindow;
-
-    private int _currentSecond;
-
-    private bool _breakTimer;
-
-    private bool _stopTimer;
 
     #endregion
 }
