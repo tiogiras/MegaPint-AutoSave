@@ -16,10 +16,7 @@ internal static partial class Constants
         }
 
         private static readonly string s_base = Path.Combine("MegaPint", "AutoSave");
-
-        private static readonly string s_resources = Path.Combine(s_base, "Resources");
-
-        private static readonly string s_userInterface = Path.Combine(s_resources, "User Interface");
+        private static readonly string s_userInterface = Path.Combine(s_base, "User Interface");
     }
 }
 

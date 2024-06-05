@@ -6,6 +6,7 @@ using MegaPint.Editor.Scripts.PackageManager.Packages;
 using MegaPint.Editor.Scripts.Tests.Utility;
 using NUnit.Framework;
 using UnityEngine.TestTools;
+using UnityEngine.UIElements;
 
 namespace MegaPint.Editor.Scripts.Tests
 {
@@ -35,6 +36,16 @@ internal class PackageTests
             Assert.Fail("FAILED ===> Missing packageCache initialization!");
 
         TestsUtility.CheckStructure(PackageKey.AutoSave);
+    }
+
+    [Test] [Order(1)]
+    public void Resources()
+    {
+        var isValid = true;
+
+        TestsUtility.ValidateResource <VisualTreeAsset>(ref isValid, Constants.AutoSave.UserInterface.AutoSaveWindow);
+
+        Assert.IsTrue(isValid);
     }
 
     #endregion
