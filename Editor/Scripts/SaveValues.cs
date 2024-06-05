@@ -5,7 +5,7 @@ using MegaPint.Editor.Scripts.Settings;
 namespace MegaPint.Editor.Scripts
 {
 
-/// <summary> Partial class storing saveData values (PlayModeStartScene) </summary>
+/// <summary> Partial class storing saveData values (AutoSave) </summary>
 internal static partial class SaveValues
 {
     public static class AutoSave
