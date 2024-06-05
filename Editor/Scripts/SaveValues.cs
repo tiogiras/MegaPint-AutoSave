@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using MegaPint.Editor.Scripts.Settings;
 
 namespace MegaPint.Editor.Scripts
@@ -56,3 +57,4 @@ internal static partial class SaveValues
 }
 
 }
+#endif

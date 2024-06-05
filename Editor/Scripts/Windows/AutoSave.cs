@@ -1,7 +1,6 @@
 #if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -60,7 +59,7 @@ internal class AutoSave : EditorWindowBase
 
     protected override string BasePath()
     {
-        return Path.Combine(Constants.AutoSave.Resources.UserInterface.WindowsPath, "AutoSave");
+        return Constants.AutoSave.UserInterface.AutoSaveWindow;
     }
 
     protected override void CreateGUI()

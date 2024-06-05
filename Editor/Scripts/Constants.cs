@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿#if UNITY_EDITOR
+using System.IO;
 
 namespace MegaPint.Editor.Scripts
 {
@@ -8,20 +9,19 @@ internal static partial class Constants
 {
     public static class AutoSave
     {
-        public static class Resources
+        public static class UserInterface
         {
-            public static class UserInterface
-            {
-                public static readonly string WindowsPath = Path.Combine(s_userInterfacePath, "Windows");
-            }
-
-            private static readonly string s_userInterfacePath = Path.Combine(s_resourcesPath, "User Interface");
+            private static readonly string s_windows = Path.Combine(s_userInterface, "Windows");
+            public static readonly string AutoSaveWindow = Path.Combine(s_windows, "Auto Save");
         }
 
-        private static readonly string s_basePath = Path.Combine("MegaPint", "AutoSave");
+        private static readonly string s_base = Path.Combine("MegaPint", "AutoSave");
 
-        private static readonly string s_resourcesPath = Path.Combine(s_basePath, "Resources");
+        private static readonly string s_resources = Path.Combine(s_base, "Resources");
+
+        private static readonly string s_userInterface = Path.Combine(s_resources, "User Interface");
     }
 }
 
 }
+#endif
