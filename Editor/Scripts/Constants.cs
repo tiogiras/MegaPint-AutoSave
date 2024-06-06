@@ -9,6 +9,11 @@ internal static partial class Constants
 {
     public static class AutoSave
     {
+        public static class Links
+        {
+            public static readonly string AutoSaveWindow = Path.Combine(ContextMenu.MenuItemPackages, "Auto Save");
+        }
+
         public static class UserInterface
         {
             private static readonly string s_windows = Path.Combine(s_userInterface, "Windows");
