@@ -11,7 +11,9 @@ internal static partial class Constants
     {
         public static class Links
         {
-            public static readonly string AutoSaveWindow = Path.Combine(ContextMenu.MenuItemPackages, "Auto Save");
+            public static readonly string AutoSaveWindow = Utility.CombineMenuItemPath(
+                ContextMenu.MenuItemPackages,
+                "AutoSave");
         }
 
         public static class UserInterface
