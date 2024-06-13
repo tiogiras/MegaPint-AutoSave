@@ -1,11 +1,11 @@
 {
   "name": "com.tiogiras.megapint-autosave",
-  "displayName": "Megapint - Scene-AutoSave",
+  "displayName": "MegaPint - Scene-AutoSave",
   "author": "Tiogiras",
   "version": "1.0.2",
   "unity": "2022.3",
   "category": "Tools",
-  "description": "This package allows you to enable an autosaving feature for scenes.",
+  "description": "This AutoSave package adds functionality to save your opened scenes in set intervals. You can overwrite your current scene file or create timestamped backup files.\n\nCustomize once and never worry about scene saving again.",
   "repository": {
     "url": "https://github.com/tiogiras/MegaPint-AutoSave.git"
   }

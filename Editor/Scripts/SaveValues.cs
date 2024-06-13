@@ -17,6 +17,8 @@ internal static partial class SaveValues
         private static CacheValue <int> s_interval = new() {defaultValue = 30};
         private static CacheValue <int> s_saveMode = new() {defaultValue = 0};
 
+        private static CacheValue <bool> s_applyPSAutoSaveWindow = new() {defaultValue = true};
+
         private static SettingsBase s_settings;
 
         public static string DuplicatePath
@@ -41,6 +43,12 @@ internal static partial class SaveValues
         {
             get => ValueProperty.Get("saveMode", ref s_saveMode, _Settings);
             set => ValueProperty.Set("saveMode", value, ref s_saveMode, _Settings);
+        }
+
+        public static bool ApplyPSAutoSaveWindow
+        {
+            get => ValueProperty.Get("ApplyPS_AutoSaveWindow", ref s_applyPSAutoSaveWindow, _Settings);
+            set => ValueProperty.Set("ApplyPS_AutoSaveWindow", value, ref s_applyPSAutoSaveWindow, _Settings);
         }
 
         private static SettingsBase _Settings

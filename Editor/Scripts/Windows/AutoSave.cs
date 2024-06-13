@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MegaPint.Editor.Scripts.GUI.Utility;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -36,8 +37,9 @@ internal class AutoSave : EditorWindowBase
     private ProgressBar _nextSaveProgress;
 
     private GroupBox _playMode;
-
     private bool _stopTimer;
+
+    private bool _timerActive;
 
     #region Public Methods
 
@@ -49,6 +51,12 @@ internal class AutoSave : EditorWindowBase
         maxSize = new Vector2(300, 90);
 
         titleContent.text = "AutoSave";
+
+        if (!SaveValues.AutoSave.ApplyPSAutoSaveWindow)
+            return this;
+
+        this.CenterOnMainWin();
+        SaveValues.AutoSave.ApplyPSAutoSaveWindow = false;
 
         return this;
     }
@@ -118,11 +126,8 @@ internal class AutoSave : EditorWindowBase
 
         SaveValues.AutoSave.onSettingsChanged += UpdateStaticGUI;
 
-#pragma warning disable CS4014
-        _btnPlay.clickable = new Clickable(_ => {Timer();});
-#pragma warning restore CS4014
-
-        _btnStop.clickable = new Clickable(_ => {_stopTimer = true;});
+        _btnPlay.clicked += OnPlay;
+        _btnStop.clicked += OnStop;
     }
 
     protected override void UnRegisterCallbacks()
@@ -131,8 +136,8 @@ internal class AutoSave : EditorWindowBase
 
         SaveValues.AutoSave.onSettingsChanged -= UpdateStaticGUI;
 
-        _btnPlay.clickable = null;
-        _btnStop.clickable = null;
+        _btnPlay.clicked -= OnPlay;
+        _btnStop.clicked -= OnStop;
     }
 
     #endregion
@@ -174,11 +179,24 @@ internal class AutoSave : EditorWindowBase
     /// <param name="active"> If the autoSave feature is active </param>
     private void ChangeButtonStates(bool active)
     {
+        _btnPlay.pickingMode = active ? PickingMode.Ignore : PickingMode.Position;
         _btnPlay.style.opacity = active ? .5f : 1f;
         _btnPlay.focusable = !active;
 
+        _btnStop.pickingMode = active ? PickingMode.Position : PickingMode.Ignore;
         _btnStop.style.opacity = active ? 1f : .5f;
         _btnStop.focusable = active;
+    }
+
+    /// <summary> Play button callback </summary>
+    private void OnPlay()
+    {
+        if (_timerActive)
+            return;
+
+#pragma warning disable CS4014
+        Timer();
+#pragma warning restore CS4014
     }
 
     /// <summary> Callback for when the editor changes playmode </summary>
@@ -203,12 +221,29 @@ internal class AutoSave : EditorWindowBase
                 _editMode.style.display = DisplayStyle.None;
 
                 break;
+
+            case PlayModeStateChange.EnteredPlayMode:
+                return;
+
+            case PlayModeStateChange.ExitingPlayMode:
+                return;
+
+            default:
+                return;
         }
+    }
+
+    /// <summary> Stop button callback </summary>
+    private void OnStop()
+    {
+        _stopTimer = true;
     }
 
     /// <summary> Timer method for the autoSave feature </summary>
     private async Task Timer()
     {
+        _timerActive = true;
+
         ToggleGUI(true);
         ChangeButtonStates(true);
 
@@ -217,17 +252,21 @@ internal class AutoSave : EditorWindowBase
             _currentSecond++;
             UpdateGUI();
 
-            await Task.Delay(1000);
+            await TryWaitOneSecond();
         }
 
         _stopTimer = false;
+        _timerActive = false;
         _currentSecond = 0;
 
         ToggleGUI(false);
         ChangeButtonStates(false);
 
         if (SaveValues.AutoSave.Warning)
+        {
             EditorApplication.Beep();
+            Debug.LogWarning("AutoSave feature was stopped!");
+        }
     }
 
     /// <summary> Toggle specific parts GUI </summary>
@@ -240,6 +279,18 @@ internal class AutoSave : EditorWindowBase
         _lastSave.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
         _nextSave.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
         _nextSaveProgress.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
+    }
+
+    /// <summary> Try to wait one second break if the timer should be stopped </summary>
+    private async Task TryWaitOneSecond()
+    {
+        for (var i = 0; i < 10; i++)
+        {
+            if (_breakTimer || _stopTimer)
+                return;
+
+            await Task.Delay(100);
+        }
     }
 
     /// <summary> Update the gui </summary>
