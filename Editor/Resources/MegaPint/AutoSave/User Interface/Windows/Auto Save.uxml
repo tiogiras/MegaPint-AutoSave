@@ -26,7 +26,7 @@
                 </ui:GroupBox>
             </ui:GroupBox>
             <ui:GroupBox name="PlayMode" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
-                <MegaPint.Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="Paused in EditMode" style="margin-top: 20px; margin-right: 20px; margin-bottom: 20px; margin-left: 20px; white-space: normal; -unity-text-align: upper-center;" />
+                <MegaPint.Editor.Scripts.GUI.Factories.TextElements.Text tabindex="-1" text="Paused in PlayMode" style="margin-top: 20px; margin-right: 20px; margin-bottom: 20px; margin-left: 20px; white-space: normal; -unity-text-align: upper-center;" />
             </ui:GroupBox>
         </MegaPint.Editor.Scripts.GUI.Factories.Backgrounds.BackgroundTertiary>
     </MegaPint.Editor.Scripts.GUI.Factories.RootElement>

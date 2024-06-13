@@ -51,7 +51,12 @@ internal class AutoSave : EditorWindowBase
         maxSize = new Vector2(300, 90);
 
         titleContent.text = "AutoSave";
+        
+        SaveValues.AutoSave.WasActive = true;
+        Debug.Log("Set to true");
 
+        Debug.Log(SaveValues.AutoSave.ApplyPSAutoSaveWindow);
+        
         if (!SaveValues.AutoSave.ApplyPSAutoSaveWindow)
             return this;
 
@@ -109,8 +114,25 @@ internal class AutoSave : EditorWindowBase
         {
             _playMode.style.display = DisplayStyle.None;
             _editMode.style.display = DisplayStyle.Flex;
-            Task _ = Timer();
+
+            rootVisualElement.schedule.Execute(TryStartTimer);
         }
+    }
+
+    // TODO commenting
+    private void TryStartTimer()
+    {
+        var wasActive = SaveValues.AutoSave.WasActive;
+        
+        Debug.Log(wasActive); // TODO remove
+
+        ToggleGUI(wasActive);
+        ChangeButtonStates(wasActive);
+
+        if (!wasActive)
+            return;
+        
+        Task _ = Timer();
     }
 
     protected override bool LoadResources()
@@ -194,6 +216,8 @@ internal class AutoSave : EditorWindowBase
         if (_timerActive)
             return;
 
+        SaveValues.AutoSave.WasActive = true;
+
 #pragma warning disable CS4014
         Timer();
 #pragma warning restore CS4014
@@ -207,7 +231,7 @@ internal class AutoSave : EditorWindowBase
         {
             case PlayModeStateChange.EnteredEditMode:
                 _breakTimer = false;
-                Task _ = Timer();
+                TryStartTimer();
 
                 _playMode.style.display = DisplayStyle.None;
                 _editMode.style.display = DisplayStyle.Flex;
@@ -262,11 +286,16 @@ internal class AutoSave : EditorWindowBase
         ToggleGUI(false);
         ChangeButtonStates(false);
 
+        if (_breakTimer && !_stopTimer)
+            return;
+        
         if (SaveValues.AutoSave.Warning)
         {
             EditorApplication.Beep();
             Debug.LogWarning("AutoSave feature was stopped!");
         }
+
+        SaveValues.AutoSave.WasActive = false;
     }
 
     /// <summary> Toggle specific parts GUI </summary>
