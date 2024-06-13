@@ -17,6 +17,7 @@ internal static partial class SaveValues
         private static CacheValue <int> s_interval = new() {defaultValue = 30};
         private static CacheValue <int> s_saveMode = new() {defaultValue = 0};
 
+        private static CacheValue <bool> s_wasActive = new() {defaultValue = true};
         private static CacheValue <bool> s_applyPSAutoSaveWindow = new() {defaultValue = true};
 
         private static SettingsBase s_settings;
@@ -51,12 +52,18 @@ internal static partial class SaveValues
             set => ValueProperty.Set("ApplyPS_AutoSaveWindow", value, ref s_applyPSAutoSaveWindow, _Settings);
         }
 
+        public static bool WasActive
+        {
+            get => ValueProperty.Get("WasActive", ref s_wasActive, _Settings);
+            set => ValueProperty.Set("WasActive", value, ref s_wasActive, _Settings);
+        }
+
         private static SettingsBase _Settings
         {
             get
             {
                 if (MegaPintSettings.Exists())
-                    return s_generalSettings ??= MegaPintSettings.instance.GetSetting("AutoSave");
+                    return s_settings ??= MegaPintSettings.instance.GetSetting("AutoSave");
 
                 return null;
             }
