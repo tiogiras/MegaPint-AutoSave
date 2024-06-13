@@ -51,12 +51,9 @@ internal class AutoSave : EditorWindowBase
         maxSize = new Vector2(300, 90);
 
         titleContent.text = "AutoSave";
-        
-        SaveValues.AutoSave.WasActive = true;
-        Debug.Log("Set to true");
 
-        Debug.Log(SaveValues.AutoSave.ApplyPSAutoSaveWindow);
-        
+        SaveValues.AutoSave.WasActive = true;
+
         if (!SaveValues.AutoSave.ApplyPSAutoSaveWindow)
             return this;
 
@@ -117,22 +114,6 @@ internal class AutoSave : EditorWindowBase
 
             rootVisualElement.schedule.Execute(TryStartTimer);
         }
-    }
-
-    // TODO commenting
-    private void TryStartTimer()
-    {
-        var wasActive = SaveValues.AutoSave.WasActive;
-        
-        Debug.Log(wasActive); // TODO remove
-
-        ToggleGUI(wasActive);
-        ChangeButtonStates(wasActive);
-
-        if (!wasActive)
-            return;
-        
-        Task _ = Timer();
     }
 
     protected override bool LoadResources()
@@ -288,7 +269,7 @@ internal class AutoSave : EditorWindowBase
 
         if (_breakTimer && !_stopTimer)
             return;
-        
+
         if (SaveValues.AutoSave.Warning)
         {
             EditorApplication.Beep();
@@ -308,6 +289,20 @@ internal class AutoSave : EditorWindowBase
         _lastSave.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
         _nextSave.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
         _nextSaveProgress.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
+    }
+
+    /// <summary> Try to start the timer, fails if the timer was not playing previously </summary>
+    private void TryStartTimer()
+    {
+        var wasActive = SaveValues.AutoSave.WasActive;
+
+        ToggleGUI(wasActive);
+        ChangeButtonStates(wasActive);
+
+        if (!wasActive)
+            return;
+
+        Task _ = Timer();
     }
 
     /// <summary> Try to wait one second break if the timer should be stopped </summary>
