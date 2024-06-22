@@ -1,42 +1,59 @@
 ﻿#if UNITY_EDITOR
 using System;
-using Editor.Scripts.Settings;
-using Editor.Scripts.Windows;
+using MegaPint.Editor.Scripts.Settings;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using GUIUtility = MegaPint.Editor.Scripts.GUI.Utility.GUIUtility;
 
-namespace Editor.Scripts
+namespace MegaPint.Editor.Scripts
 {
 
+/// <summary> Partial class used to display the right pane in the BaseWindow </summary>
 internal static partial class DisplayContent
 {
-    private const string BasePathAutoSave = "AutoSave/User Interface/Display Content Tabs/";
-
     #region Private Methods
 
     // Called by reflection
     // ReSharper disable once UnusedMember.Local
-    private static void AutoSave(VisualElement root)
+    private static void AutoSave(DisplayContentReferences refs)
     {
-        var tabs = root.Q <GroupBox>("Tabs");
-        var tabContentParent = root.Q <GroupBox>("TabContent");
+        InitializeDisplayContent(
+            refs,
+            new TabSettings {info = true, settings = true},
+            new TabActions
+            {
+                info = root =>
+                {
+                    GUIUtility.ActivateLinks(
+                        root,
+                        link =>
+                        {
+                            switch (link.linkID)
+                            {
+                                case "autosave":
+                                    EditorApplication.ExecuteMenuItem(
+                                        link.linkText);
 
-        RegisterTabCallbacks(tabs, tabContentParent, 2);
-
-        SetTabContentLocations(BasePathAutoSave + "Tab0", BasePathAutoSave + "Tab1");
-
-        s_onSelectedTabChanged += OnTabChangedAutoSave;
-        s_onSelectedPackageChanged += UnsubscribeAutoSave;
-
-        SwitchTab(tabContentParent, 0);
+                                    break;
+                            }
+                        });
+                },
+                settings = AutoSaveSettingsTab
+            });
     }
 
-    private static void AutoSavePathChange(Label pathLabel, VisualElement btnSave)
+    /// <summary> Change the path the saved scenes are saved in </summary>
+    /// <param name="pathLabel"> Label the path is displayed in </param>
+    /// <param name="btnSave"> Button to save the new path </param>
+    private static void AutoSavePathChange(TextElement pathLabel, VisualElement btnSave)
     {
-        var oldValue = MegaPintAutoSaveData.DuplicatePathValue;
+        var oldValue = SaveValues.AutoSave.DuplicatePath;
 
         var path = EditorUtility.OpenFolderPanel("Set folder for duplicates", "Assets/", "");
+
+        if (string.IsNullOrEmpty(path))
+            return;
 
         if (!path.StartsWith(Application.dataPath))
         {
@@ -50,7 +67,7 @@ internal static partial class DisplayContent
             path = path.Replace(Application.dataPath, "");
             path = path.Insert(0, "Assets");
 
-            MegaPintAutoSaveData.DuplicatePathValue = path;
+            SaveValues.AutoSave.DuplicatePath = path;
 
             AutoSavePathVisuals(pathLabel);
         }
@@ -59,9 +76,11 @@ internal static partial class DisplayContent
             btnSave.style.display = DisplayStyle.Flex;
     }
 
-    private static void AutoSavePathVisuals(Label path)
+    /// <summary> Display the autoSave path </summary>
+    /// <param name="path"> Path to display </param>
+    private static void AutoSavePathVisuals(TextElement path)
     {
-        var duplicatePathValue = MegaPintAutoSaveData.DuplicatePathValue;
+        var duplicatePathValue = SaveValues.AutoSave.DuplicatePath;
 
         var cleanPath = duplicatePathValue[(duplicatePathValue.IndexOf("/", StringComparison.Ordinal) + 1)..];
 
@@ -86,16 +105,10 @@ internal static partial class DisplayContent
         path.tooltip = duplicatePathValue;
     }
 
-    private static void AutoSaveTab0(VisualElement root)
+    /// <summary> Handle the logic for the autoSave settings tab </summary>
+    /// <param name="root"> Root element of the tab </param>
+    private static void AutoSaveSettingsTab(VisualElement root)
     {
-        root.Q <Button>("BTN_Open").clickable = new Clickable(
-            _ => {ContextMenu.TryOpen <MegaPintAutoSave>(false);});
-    }
-
-    private static void AutoSaveTab1(VisualElement root)
-    {
-        #region Collect References
-
         var interval = root.Q <IntegerField>("Interval");
         var saveMode = root.Q <DropdownField>("SaveMode");
         var warning = root.Q <Toggle>("Warning");
@@ -105,38 +118,26 @@ internal static partial class DisplayContent
         var btnSave = root.Q <Button>("BTN_Save");
         var path = root.Q <Label>("Path");
 
-        #endregion
-
-        #region Set initial Values
-
-        interval.value = MegaPintAutoSaveData.IntervalValue;
-        saveMode.index = MegaPintAutoSaveData.SaveModeValue;
-        warning.value = MegaPintAutoSaveData.WarningValue;
-
-        #endregion
-
-        #region Set initial Visuals
+        interval.value = SaveValues.AutoSave.Interval;
+        saveMode.index = SaveValues.AutoSave.SaveMode;
+        warning.value = SaveValues.AutoSave.Warning;
 
         duplicatePath.style.display = saveMode.index == 1 ? DisplayStyle.Flex : DisplayStyle.None;
         btnSave.style.display = DisplayStyle.None;
 
         AutoSavePathVisuals(path);
 
-        #endregion
-
-        #region Register Callbacks
-
         interval.RegisterValueChangedCallback(
             evt =>
             {
-                if (evt.newValue != MegaPintAutoSaveData.IntervalValue)
+                if (evt.newValue != SaveValues.AutoSave.Interval)
                     btnSave.style.display = DisplayStyle.Flex;
             });
 
         warning.RegisterValueChangedCallback(
             evt =>
             {
-                if (evt.newValue != MegaPintAutoSaveData.WarningValue)
+                if (evt.newValue != SaveValues.AutoSave.Warning)
                     btnSave.style.display = DisplayStyle.Flex;
             });
 
@@ -145,7 +146,7 @@ internal static partial class DisplayContent
             {
                 duplicatePath.style.display = saveMode.index == 1 ? DisplayStyle.Flex : DisplayStyle.None;
 
-                if (saveMode.index != MegaPintAutoSaveData.SaveModeValue)
+                if (saveMode.index != SaveValues.AutoSave.SaveMode)
                     btnSave.style.display = DisplayStyle.Flex;
             });
 
@@ -153,41 +154,17 @@ internal static partial class DisplayContent
 
         btnSave.clicked += () =>
         {
-            MegaPintAutoSaveData.IntervalValue = interval.value;
-            MegaPintAutoSaveData.SaveModeValue = saveMode.index;
-            MegaPintAutoSaveData.WarningValue = warning.value;
-            MegaPintAutoSaveData.DuplicatePathValue = path.tooltip;
+            SaveValues.AutoSave.Interval = interval.value;
+            SaveValues.AutoSave.SaveMode = saveMode.index;
+            SaveValues.AutoSave.Warning = warning.value;
+            SaveValues.AutoSave.DuplicatePath = path.tooltip;
 
             MegaPintSettings.Save();
 
-            MegaPintAutoSaveData.onSettingsChanged?.Invoke();
+            SaveValues.AutoSave.onSettingsChanged?.Invoke();
 
             btnSave.style.display = DisplayStyle.None;
         };
-
-        #endregion
-    }
-
-    private static void OnTabChangedAutoSave(int tab, VisualElement root)
-    {
-        switch (tab)
-        {
-            case 0:
-                AutoSaveTab0(root);
-
-                break;
-
-            case 1:
-                AutoSaveTab1(root);
-
-                break;
-        }
-    }
-
-    private static void UnsubscribeAutoSave()
-    {
-        s_onSelectedTabChanged -= OnTabChangedAutoSave;
-        s_onSelectedPackageChanged -= UnsubscribeAutoSave;
     }
 
     #endregion
