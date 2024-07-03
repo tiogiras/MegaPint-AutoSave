@@ -1,5 +1,5 @@
 ﻿#if UNITY_EDITOR
-using MegaPint.Editor.Scripts.Windows;
+using MegaPint.Editor.Scripts.PackageManager.Packages;
 using UnityEditor;
 
 namespace MegaPint.Editor.Scripts
@@ -8,15 +8,23 @@ namespace MegaPint.Editor.Scripts
 /// <summary> Partial class used to store MenuItems </summary>
 internal static partial class ContextMenu
 {
-    #region Private Methods
-
-    [MenuItem(MenuItemPackages + "/AutoSave", false, 12)]
-    private static void OpenAutoSave()
+    public static class AutoSave
     {
-        TryOpen <AutoSave>(false);
-    }
+        private static readonly MenuItemSignature s_autoSaveSignature = new()
+        {
+            package = PackageKey.AutoSave, signature = "AutoSave"
+        };
 
-    #endregion
+        #region Private Methods
+
+        [MenuItem(MenuItemPackages + "/AutoSave", false, 12)]
+        private static void OpenAutoSave()
+        {
+            TryOpen <Windows.AutoSave>(false, s_autoSaveSignature);
+        }
+
+        #endregion
+    }
 }
 
 }
