@@ -135,7 +135,6 @@ internal static class AutoSaveTimer
         while (await TryWaitOneSecond())
         {
             s_currentSecond++;
-            Debug.Log($"TICK ({s_currentSecond}/{s_interval})");
             onTimerTick?.Invoke(s_currentSecond);
 
             if (s_currentSecond < s_interval)

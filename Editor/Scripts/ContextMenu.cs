@@ -18,7 +18,7 @@ internal static partial class ContextMenu
         #region Private Methods
 
         [MenuItem(MenuItemPackages + "/AutoSave", false, 12)]
-        private static void OpenAutoSave()
+        public static void OpenAutoSave()
         {
             TryOpen <Windows.AutoSave>(false, s_autoSaveSignature);
         }
