@@ -1,6 +1,8 @@
 ﻿#if UNITY_EDITOR
 using System;
 using MegaPint.Editor.Scripts.Settings;
+using UnityEditor;
+using UnityEngine;
 
 namespace MegaPint.Editor.Scripts
 {
@@ -11,16 +13,20 @@ internal static partial class SaveValues
     public static class AutoSave
     {
         public static Action onSettingsChanged;
+        public static Action <bool> onIsActiveChanged;
 
         private static CacheValue <string> s_duplicatePath = new() {defaultValue = "Assets"};
         private static CacheValue <bool> s_warning = new() {defaultValue = true};
         private static CacheValue <int> s_interval = new() {defaultValue = 30};
         private static CacheValue <int> s_saveMode = new() {defaultValue = 0};
+        private static CacheValue <bool> s_displayToolbarToggle = new() {defaultValue = true};
 
-        private static CacheValue <bool> s_wasActive = new() {defaultValue = true};
+        private static CacheValue <bool> s_isActive = new() {defaultValue = false};
+        
         private static CacheValue <bool> s_applyPSAutoSaveWindow = new() {defaultValue = true};
 
         private static SettingsBase s_settings;
+        
 
         public static string DuplicatePath
         {
@@ -52,10 +58,26 @@ internal static partial class SaveValues
             set => ValueProperty.Set("ApplyPS_AutoSaveWindow", value, ref s_applyPSAutoSaveWindow, _Settings);
         }
 
-        public static bool WasActive
+        public static bool DisplayToolbarToggle
         {
-            get => ValueProperty.Get("WasActive", ref s_wasActive, _Settings);
-            set => ValueProperty.Set("WasActive", value, ref s_wasActive, _Settings);
+            get => ValueProperty.Get("DisplayToolbarToggle", ref s_displayToolbarToggle, _Settings);
+            set => ValueProperty.Set("DisplayToolbarToggle", value, ref s_displayToolbarToggle, _Settings);
+        }
+        
+        public static bool IsActive
+        {
+            get => ValueProperty.Get("IsActive", ref s_isActive, _Settings);
+            set
+            {
+                ValueProperty.Set("IsActive", value, ref s_isActive, _Settings);
+                onIsActiveChanged?.Invoke(value);
+
+                if (!Warning || value)
+                    return;
+
+                EditorApplication.Beep();
+                Debug.LogWarning("AutoSave feature was stopped!");
+            }
         }
 
         private static SettingsBase _Settings
