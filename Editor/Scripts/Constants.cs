@@ -20,6 +20,7 @@ internal static partial class Constants
         {
             private static readonly string s_windows = Path.Combine(s_userInterface, "Windows");
             public static readonly string AutoSaveWindow = Path.Combine(s_windows, "Auto Save");
+            public static readonly string ToolbarButton = Path.Combine(s_windows, "Toolbar Button");
         }
 
         private static readonly string s_base = Path.Combine("MegaPint", "AutoSave");

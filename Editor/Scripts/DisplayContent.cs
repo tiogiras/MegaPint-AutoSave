@@ -112,6 +112,7 @@ internal static partial class DisplayContent
         var interval = root.Q <IntegerField>("Interval");
         var saveMode = root.Q <DropdownField>("SaveMode");
         var warning = root.Q <Toggle>("Warning");
+        var displayToolbarToggle = root.Q <Toggle>("DisplayToolbarToggle");
 
         var duplicatePath = root.Q <GroupBox>("DuplicatePath");
         var btnChange = root.Q <Button>("BTN_Change");
@@ -121,6 +122,7 @@ internal static partial class DisplayContent
         interval.value = SaveValues.AutoSave.Interval;
         saveMode.index = SaveValues.AutoSave.SaveMode;
         warning.value = SaveValues.AutoSave.Warning;
+        displayToolbarToggle.value = SaveValues.AutoSave.DisplayToolbarToggle;
 
         duplicatePath.style.display = saveMode.index == 1 ? DisplayStyle.Flex : DisplayStyle.None;
         btnSave.style.display = DisplayStyle.None;
@@ -130,6 +132,12 @@ internal static partial class DisplayContent
         interval.RegisterValueChangedCallback(
             evt =>
             {
+                if (evt.newValue < 1)
+                {
+                    interval.value = 1;
+                    return;
+                }
+
                 if (evt.newValue != SaveValues.AutoSave.Interval)
                     btnSave.style.display = DisplayStyle.Flex;
             });
@@ -149,6 +157,9 @@ internal static partial class DisplayContent
                 if (saveMode.index != SaveValues.AutoSave.SaveMode)
                     btnSave.style.display = DisplayStyle.Flex;
             });
+
+        displayToolbarToggle.RegisterValueChangedCallback(
+            evt => {SaveValues.AutoSave.DisplayToolbarToggle = evt.newValue;});
 
         btnChange.clicked += () => {AutoSavePathChange(path, btnSave);};
 
