@@ -44,6 +44,7 @@ internal class PackageTests
         var isValid = true;
 
         TestsUtility.ValidateResource <VisualTreeAsset>(ref isValid, Constants.AutoSave.UserInterface.AutoSaveWindow);
+        TestsUtility.ValidateResource <VisualTreeAsset>(ref isValid, Constants.AutoSave.UserInterface.ToolbarButton);
 
         Assert.IsTrue(isValid);
     }
