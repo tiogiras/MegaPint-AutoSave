@@ -31,9 +31,14 @@ internal static partial class DisplayContent
                         {
                             switch (link.linkID)
                             {
-                                case "autosave":
+                                case "autoSavePath":
                                     EditorApplication.ExecuteMenuItem(
                                         link.linkText);
+
+                                    break;
+                                    
+                                case "autoSave":
+                                    ContextMenu.AutoSave.OpenAutoSave();
 
                                     break;
                             }
