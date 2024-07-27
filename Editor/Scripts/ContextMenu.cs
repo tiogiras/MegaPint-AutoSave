@@ -15,7 +15,7 @@ internal static partial class ContextMenu
             package = PackageKey.AutoSave, signature = "AutoSave"
         };
 
-        #region Private Methods
+        #region Public Methods
 
         [MenuItem(MenuItemPackages + "/AutoSave", false, 12)]
         public static void OpenAutoSave()
