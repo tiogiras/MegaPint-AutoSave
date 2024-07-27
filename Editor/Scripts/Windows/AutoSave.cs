@@ -13,12 +13,13 @@ namespace MegaPint.Editor.Scripts.Windows
 /// <summary> Window based on the <see cref="EditorWindowBase" /> to display and handle the autoSave </summary>
 internal class AutoSave : EditorWindowBase
 {
+    public static Action onOpen;
+    public static Action onClose;
+
     private VisualTreeAsset _baseWindow;
 
     private Button _btnPlay;
     private Button _btnStop;
-
-    private GroupBox _playMode;
     private GroupBox _editMode;
 
     private Label _interval;
@@ -26,6 +27,8 @@ internal class AutoSave : EditorWindowBase
     private Label _nextSave;
 
     private ProgressBar _nextSaveProgress;
+
+    private GroupBox _playMode;
 
     #region Public Methods
 
@@ -37,6 +40,8 @@ internal class AutoSave : EditorWindowBase
         maxSize = new Vector2(300, 90);
 
         titleContent.text = "AutoSave";
+
+        onOpen?.Invoke();
 
         if (!SaveValues.AutoSave.ApplyPSAutoSaveWindow)
             return this;
@@ -89,22 +94,8 @@ internal class AutoSave : EditorWindowBase
 
         UpdatePlayEditModeGUI();
         UpdateStaticGUI();
-        
-        ChangeButtonStates(SaveValues.AutoSave.IsActive);
-    }
 
-    private void UpdatePlayEditModeGUI()
-    {
-        if (EditorApplication.isPlaying)
-        {
-            _playMode.style.display = DisplayStyle.Flex;
-            _editMode.style.display = DisplayStyle.None;
-        }
-        else
-        {
-            _playMode.style.display = DisplayStyle.None;
-            _editMode.style.display = DisplayStyle.Flex;
-        }
+        ChangeButtonStates(SaveValues.AutoSave.IsActive);
     }
 
     protected override bool LoadResources()
@@ -122,7 +113,7 @@ internal class AutoSave : EditorWindowBase
 
         _btnPlay.clicked += OnPlay;
         _btnStop.clicked += OnStop;
-        
+
         AutoSaveTimer.onTimerTick += OnTimerTick;
         AutoSaveTimer.onTimerStarted += OnTimerStarted;
         AutoSaveTimer.onTimerStopped += OnTimerStopped;
@@ -133,63 +124,32 @@ internal class AutoSave : EditorWindowBase
         EditorApplication.playModeStateChanged -= OnPlayModeChange;
 
         SaveValues.AutoSave.onSettingsChanged -= UpdateStaticGUI;
-        
+
         _btnPlay.clicked -= OnPlay;
         _btnStop.clicked -= OnStop;
-        
+
         AutoSaveTimer.onTimerTick -= OnTimerTick;
         AutoSaveTimer.onTimerStarted -= OnTimerStarted;
         AutoSaveTimer.onTimerStopped -= OnTimerStopped;
+
+        onClose?.Invoke();
     }
 
+    #endregion
+
+    #region Private Methods
+
+    /// <summary> Callback for the play button </summary>
     private static void OnPlay()
     {
         SaveValues.AutoSave.IsActive = true;
     }
 
+    /// <summary> Callback for the stop button </summary>
     private static void OnStop()
     {
         SaveValues.AutoSave.IsActive = false;
     }
-
-    private void OnTimerStarted()
-    {
-        ChangeButtonStates(true);
-        
-        UpdateStaticGUI();
-        UpdateGUI(0, true);
-        
-        _nextSaveProgress.style.display = DisplayStyle.Flex;
-        _nextSave.style.display = DisplayStyle.Flex;
-    }
-
-    private void OnTimerStopped()
-    {
-        ChangeButtonStates(false);
-        
-        UpdateGUI(0, false);
-        
-        _nextSaveProgress.style.display = DisplayStyle.None;
-        _nextSave.style.display = DisplayStyle.None;  
-    }
-
-    #endregion
-
-    private void OnTimerTick(int tick)
-    {
-        if (_nextSaveProgress.style.display == DisplayStyle.None)
-        {
-            _nextSaveProgress.style.display = DisplayStyle.Flex;
-            _nextSave.style.display = DisplayStyle.Flex;
-            
-            var remainingSeconds = SaveValues.AutoSave.Interval - tick;
-            _nextSave.text = DateTime.Now.AddSeconds(remainingSeconds).ToString("HH:mm:ss");
-        }
-        
-        UpdateGUI(tick, false);
-    }
-    
-    #region Private Methods
 
     /// <summary> Change the button styles based on the current active state </summary>
     /// <param name="active"> If the autoSave feature is active </param>
@@ -209,6 +169,45 @@ internal class AutoSave : EditorWindowBase
     private void OnPlayModeChange(PlayModeStateChange state)
     {
         UpdatePlayEditModeGUI();
+    }
+
+    /// <summary> Called when the timer was started </summary>
+    private void OnTimerStarted()
+    {
+        ChangeButtonStates(true);
+
+        UpdateStaticGUI();
+        UpdateGUI(0, true);
+
+        _nextSaveProgress.style.display = DisplayStyle.Flex;
+        _nextSave.style.display = DisplayStyle.Flex;
+    }
+
+    /// <summary> Called when the timer was stopped </summary>
+    private void OnTimerStopped()
+    {
+        ChangeButtonStates(false);
+
+        UpdateGUI(0, false);
+
+        _nextSaveProgress.style.display = DisplayStyle.None;
+        _nextSave.style.display = DisplayStyle.None;
+    }
+
+    /// <summary> Called when the timer ticked </summary>
+    /// <param name="tick"> Current time of the timer </param>
+    private void OnTimerTick(int tick)
+    {
+        if (_nextSaveProgress.style.display == DisplayStyle.None)
+        {
+            _nextSaveProgress.style.display = DisplayStyle.Flex;
+            _nextSave.style.display = DisplayStyle.Flex;
+
+            var remainingSeconds = SaveValues.AutoSave.Interval - tick;
+            _nextSave.text = DateTime.Now.AddSeconds(remainingSeconds).ToString("HH:mm:ss");
+        }
+
+        UpdateGUI(tick, false);
     }
 
     /// <summary> Update the gui </summary>
@@ -231,11 +230,26 @@ internal class AutoSave : EditorWindowBase
         _nextSaveProgress.value = currentSecond;
     }
 
+    /// <summary> Update the gui based on if the application is running </summary>
+    private void UpdatePlayEditModeGUI()
+    {
+        if (EditorApplication.isPlaying)
+        {
+            _playMode.style.display = DisplayStyle.Flex;
+            _editMode.style.display = DisplayStyle.None;
+        }
+        else
+        {
+            _playMode.style.display = DisplayStyle.None;
+            _editMode.style.display = DisplayStyle.Flex;
+        }
+    }
+
     /// <summary> Update all static gui parts </summary>
     private void UpdateStaticGUI()
     {
         var intervalValue = SaveValues.AutoSave.Interval;
-        
+
         _nextSaveProgress.highValue = intervalValue;
         _interval.text = $"{intervalValue} Seconds";
     }

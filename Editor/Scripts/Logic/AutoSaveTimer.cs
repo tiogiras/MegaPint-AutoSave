@@ -1,23 +1,24 @@
-﻿// TODO commenting
-
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace MegaPint.Editor.Scripts.Logic
 {
 
+/// <summary> Handles the timer of the autosave feature </summary>
 [InitializeOnLoad]
 internal static class AutoSaveTimer
 {
     public static Action onTimerStarted;
     public static Action onTimerStopped;
     public static Action <int> onTimerTick;
+
+    public static Action onTimerSaving;
+    public static Action onTimerSaved;
 
     private static int s_currentSecond;
 
@@ -56,6 +57,8 @@ internal static class AutoSaveTimer
         return loadedScenes;
     }
 
+    /// <summary> Callback for when the toggle state changed </summary>
+    /// <param name="newValue"> New toggle state </param>
     private static void OnIsActiveChanged(bool newValue)
     {
         if (newValue)
@@ -64,6 +67,9 @@ internal static class AutoSaveTimer
             StopTimer();
     }
 
+    /// <summary> Callback for changing the playmode </summary>
+    /// <param name="evt"> Callback event </param>
+    /// <exception cref="ArgumentOutOfRangeException"> State not found </exception>
     private static void OnPlayModeChange(PlayModeStateChange evt)
     {
         switch (evt)
@@ -89,6 +95,7 @@ internal static class AutoSaveTimer
         }
     }
 
+    /// <summary> Callback for when any setting is changed </summary>
     private static void OnSettingsChanged()
     {
         s_interval = SaveValues.AutoSave.Interval;
@@ -99,6 +106,8 @@ internal static class AutoSaveTimer
     /// <summary> Save the opened scenes </summary>
     private static void Save()
     {
+        onTimerSaving?.Invoke();
+
         IEnumerable <Scene> scenes = GetAllScenes();
 
         foreach (Scene scene in scenes)
@@ -109,8 +118,11 @@ internal static class AutoSaveTimer
 
             EditorSceneManager.SaveScene(scene, destination, s_saveMode == 1);
         }
+
+        onTimerSaved?.Invoke();
     }
 
+    /// <summary> Start the timer </summary>
     private static void StartTimer()
     {
         if (!s_timerRunning)
@@ -119,6 +131,7 @@ internal static class AutoSaveTimer
 #pragma warning restore CS4014
     }
 
+    /// <summary> Stop the timer </summary>
     private static void StopTimer()
     {
         if (s_timerRunning)
@@ -148,6 +161,7 @@ internal static class AutoSaveTimer
         onTimerStopped?.Invoke();
     }
 
+    /// <summary> Try to start the timer when it was running before </summary>
     private static void TryStartRunning()
     {
         if (SaveValues.AutoSave.IsActive)

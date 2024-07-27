@@ -36,7 +36,7 @@ internal static partial class DisplayContent
                                         link.linkText);
 
                                     break;
-                                    
+
                                 case "autoSave":
                                     ContextMenu.AutoSave.OpenAutoSave();
 
@@ -124,10 +124,10 @@ internal static partial class DisplayContent
         var btnSave = root.Q <Button>("BTN_Save");
         var path = root.Q <Label>("Path");
 
-        interval.value = SaveValues.AutoSave.Interval;
+        interval.SetValueWithoutNotify(SaveValues.AutoSave.Interval);
         saveMode.index = SaveValues.AutoSave.SaveMode;
-        warning.value = SaveValues.AutoSave.Warning;
-        displayToolbarToggle.value = SaveValues.AutoSave.DisplayToolbarToggle;
+        warning.SetValueWithoutNotify(SaveValues.AutoSave.Warning);
+        displayToolbarToggle.SetValueWithoutNotify(SaveValues.AutoSave.DisplayToolbarToggle);
 
         duplicatePath.style.display = saveMode.index == 1 ? DisplayStyle.Flex : DisplayStyle.None;
         btnSave.style.display = DisplayStyle.None;
@@ -140,6 +140,7 @@ internal static partial class DisplayContent
                 if (evt.newValue < 1)
                 {
                     interval.value = 1;
+
                     return;
                 }
 
