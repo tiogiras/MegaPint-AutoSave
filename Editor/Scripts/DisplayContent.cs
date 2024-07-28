@@ -176,7 +176,7 @@ internal static partial class DisplayContent
             SaveValues.AutoSave.Warning = warning.value;
             SaveValues.AutoSave.DuplicatePath = path.tooltip;
 
-            MegaPintSettings.Save();
+            MegaPintMainSettings.Save();
 
             SaveValues.AutoSave.onSettingsChanged?.Invoke();
 
