@@ -4,7 +4,10 @@
     <Style src="project://database/Packages/com.tiogiras.megapint/Editor/Resources/MegaPint/User%20Interface/MegaPintAttributes.uss?fileID=7433441132597879392&amp;guid=db4b42bc58d645b8ab6f8c0e914c2a0c&amp;type=3#MegaPintAttributes" />
     <MegaPint.Editor.Scripts.GUI.Factories.RootElement>
         <ui:VisualElement style="flex-grow: 0; margin-top: 15px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;">
-            <uie:IntegerField label="Interval" value="30" name="Interval" tooltip="The interval in which the autosave saves the scene (in seconds)" focusable="true" style="flex-shrink: 1;" />
+            <ui:Toggle label="Display Toolbar Toggle" name="DisplayToolbarToggle" tooltip="Creates a toggle in the unity toolbar to quickly enable or disable the autosave feature." />
+            <MegaPint.Editor.Scripts.GUI.Factories.TextElements.TextSecondary tabindex="-1" text="Changes to this setting will be applied on the next domain reload." style="white-space: normal; -unity-font-style: italic; margin-bottom: 10px; margin-top: 5px;" />
+            <MegaPint.Editor.Scripts.GUI.Factories.Structure.Separator />
+            <uie:IntegerField label="Interval" value="30" name="Interval" tooltip="The interval in which the autosave saves the scene (in seconds)" focusable="true" style="flex-shrink: 1; margin-top: 5px;" />
             <ui:DropdownField label="Save Mode" index="0" choices="Save As Current,Save As Duplicate" name="SaveMode" tooltip="The mode in which the scene will be saved" />
             <ui:GroupBox name="DuplicatePath" style="margin-top: 1px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-direction: row; align-items: center; margin-left: 30px; height: 18px; flex-shrink: 1;">
                 <ui:Button text="Change" parse-escape-sequences="true" display-tooltip-when-elided="true" tooltip="Change the target folder for duplicates" name="BTN_Change" />

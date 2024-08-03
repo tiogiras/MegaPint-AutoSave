@@ -1,12 +1,9 @@
 #if UNITY_EDITOR
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using MegaPint.Editor.Scripts.GUI.Utility;
+using MegaPint.Editor.Scripts.Logic;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using GUIUtility = MegaPint.Editor.Scripts.GUI.Utility.GUIUtility;
 
@@ -16,30 +13,22 @@ namespace MegaPint.Editor.Scripts.Windows
 /// <summary> Window based on the <see cref="EditorWindowBase" /> to display and handle the autoSave </summary>
 internal class AutoSave : EditorWindowBase
 {
+    public static Action onOpen;
+    public static Action onClose;
+
     private VisualTreeAsset _baseWindow;
 
-    private bool _breakTimer;
-
     private Button _btnPlay;
-
     private Button _btnStop;
-
-    private int _currentSecond;
-
     private GroupBox _editMode;
 
     private Label _interval;
-
     private Label _lastSave;
-
     private Label _nextSave;
 
     private ProgressBar _nextSaveProgress;
 
     private GroupBox _playMode;
-    private bool _stopTimer;
-
-    private bool _timerActive;
 
     #region Public Methods
 
@@ -52,7 +41,7 @@ internal class AutoSave : EditorWindowBase
 
         titleContent.text = "AutoSave";
 
-        SaveValues.AutoSave.WasActive = true;
+        onOpen?.Invoke();
 
         if (!SaveValues.AutoSave.ApplyPSAutoSaveWindow)
             return this;
@@ -100,20 +89,13 @@ internal class AutoSave : EditorWindowBase
 
         RegisterCallbacks();
 
+        _nextSaveProgress.style.display = DisplayStyle.None;
+        _nextSave.style.display = DisplayStyle.None;
+
+        UpdatePlayEditModeGUI();
         UpdateStaticGUI();
 
-        if (EditorApplication.isPlaying)
-        {
-            _playMode.style.display = DisplayStyle.Flex;
-            _editMode.style.display = DisplayStyle.None;
-        }
-        else
-        {
-            _playMode.style.display = DisplayStyle.None;
-            _editMode.style.display = DisplayStyle.Flex;
-
-            rootVisualElement.schedule.Execute(TryStartTimer);
-        }
+        ChangeButtonStates(SaveValues.AutoSave.IsActive);
     }
 
     protected override bool LoadResources()
@@ -131,6 +113,10 @@ internal class AutoSave : EditorWindowBase
 
         _btnPlay.clicked += OnPlay;
         _btnStop.clicked += OnStop;
+
+        AutoSaveTimer.onTimerTick += OnTimerTick;
+        AutoSaveTimer.onTimerStarted += OnTimerStarted;
+        AutoSaveTimer.onTimerStopped += OnTimerStopped;
     }
 
     protected override void UnRegisterCallbacks()
@@ -141,41 +127,28 @@ internal class AutoSave : EditorWindowBase
 
         _btnPlay.clicked -= OnPlay;
         _btnStop.clicked -= OnStop;
+
+        AutoSaveTimer.onTimerTick -= OnTimerTick;
+        AutoSaveTimer.onTimerStarted -= OnTimerStarted;
+        AutoSaveTimer.onTimerStopped -= OnTimerStopped;
+
+        onClose?.Invoke();
     }
 
     #endregion
 
     #region Private Methods
 
-    /// <summary> Get all currently opened scenes </summary>
-    /// <returns> All collected scenes </returns>
-    private static IEnumerable <Scene> GetAllScenes()
+    /// <summary> Callback for the play button </summary>
+    private static void OnPlay()
     {
-        var countLoaded = SceneManager.sceneCount;
-
-        Scene[] loadedScenes = new Scene[countLoaded];
-
-        for (var i = 0; i < countLoaded; i++)
-            loadedScenes[i] = SceneManager.GetSceneAt(i);
-
-        return loadedScenes;
+        SaveValues.AutoSave.IsActive = true;
     }
 
-    /// <summary> Save the opened scenes </summary>
-    private static void Save()
+    /// <summary> Callback for the stop button </summary>
+    private static void OnStop()
     {
-        var saveModeValue = SaveValues.AutoSave.SaveMode;
-
-        IEnumerable <Scene> scenes = GetAllScenes();
-
-        foreach (Scene scene in scenes)
-        {
-            var destination = saveModeValue == 0
-                ? scene.path
-                : $"{SaveValues.AutoSave.DuplicatePath}/{scene.name} ({DateTime.Today:MM.dd.yy})({DateTime.Now:HH.mm.ss}).unity";
-
-            EditorSceneManager.SaveScene(scene, destination, saveModeValue == 1);
-        }
+        SaveValues.AutoSave.IsActive = false;
     }
 
     /// <summary> Change the button styles based on the current active state </summary>
@@ -191,142 +164,61 @@ internal class AutoSave : EditorWindowBase
         _btnStop.focusable = active;
     }
 
-    /// <summary> Play button callback </summary>
-    private void OnPlay()
-    {
-        if (_timerActive)
-            return;
-
-        SaveValues.AutoSave.WasActive = true;
-
-#pragma warning disable CS4014
-        Timer();
-#pragma warning restore CS4014
-    }
-
     /// <summary> Callback for when the editor changes playmode </summary>
     /// <param name="state"> New playmode </param>
     private void OnPlayModeChange(PlayModeStateChange state)
     {
-        switch (state)
-        {
-            case PlayModeStateChange.EnteredEditMode:
-                _breakTimer = false;
-                TryStartTimer();
-
-                _playMode.style.display = DisplayStyle.None;
-                _editMode.style.display = DisplayStyle.Flex;
-
-                break;
-
-            case PlayModeStateChange.ExitingEditMode:
-                _breakTimer = true;
-
-                _playMode.style.display = DisplayStyle.Flex;
-                _editMode.style.display = DisplayStyle.None;
-
-                break;
-
-            case PlayModeStateChange.EnteredPlayMode:
-                return;
-
-            case PlayModeStateChange.ExitingPlayMode:
-                return;
-
-            default:
-                return;
-        }
+        UpdatePlayEditModeGUI();
     }
 
-    /// <summary> Stop button callback </summary>
-    private void OnStop()
+    /// <summary> Called when the timer was started </summary>
+    private void OnTimerStarted()
     {
-        _stopTimer = true;
-    }
-
-    /// <summary> Timer method for the autoSave feature </summary>
-    private async Task Timer()
-    {
-        _timerActive = true;
-
-        ToggleGUI(true);
         ChangeButtonStates(true);
 
-        while (!_breakTimer && !_stopTimer && this != null)
-        {
-            _currentSecond++;
-            UpdateGUI();
+        UpdateStaticGUI();
+        UpdateGUI(0, true);
 
-            await TryWaitOneSecond();
-        }
+        _nextSaveProgress.style.display = DisplayStyle.Flex;
+        _nextSave.style.display = DisplayStyle.Flex;
+    }
 
-        _stopTimer = false;
-        _timerActive = false;
-        _currentSecond = 0;
-
-        ToggleGUI(false);
+    /// <summary> Called when the timer was stopped </summary>
+    private void OnTimerStopped()
+    {
         ChangeButtonStates(false);
 
-        if (_breakTimer && !_stopTimer)
-            return;
+        UpdateGUI(0, false);
 
-        if (SaveValues.AutoSave.Warning)
+        _nextSaveProgress.style.display = DisplayStyle.None;
+        _nextSave.style.display = DisplayStyle.None;
+    }
+
+    /// <summary> Called when the timer ticked </summary>
+    /// <param name="tick"> Current time of the timer </param>
+    private void OnTimerTick(int tick)
+    {
+        if (_nextSaveProgress.style.display == DisplayStyle.None)
         {
-            EditorApplication.Beep();
-            Debug.LogWarning("AutoSave feature was stopped!");
+            _nextSaveProgress.style.display = DisplayStyle.Flex;
+            _nextSave.style.display = DisplayStyle.Flex;
+
+            var remainingSeconds = SaveValues.AutoSave.Interval - tick;
+            _nextSave.text = DateTime.Now.AddSeconds(remainingSeconds).ToString("HH:mm:ss");
         }
 
-        SaveValues.AutoSave.WasActive = false;
-    }
-
-    /// <summary> Toggle specific parts GUI </summary>
-    /// <param name="active"> Active state of the ui parts </param>
-    private void ToggleGUI(bool active)
-    {
-        if (active)
-            UpdateGUI(true);
-
-        _lastSave.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
-        _nextSave.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
-        _nextSaveProgress.style.display = active ? DisplayStyle.Flex : DisplayStyle.None;
-    }
-
-    /// <summary> Try to start the timer, fails if the timer was not playing previously </summary>
-    private void TryStartTimer()
-    {
-        var wasActive = SaveValues.AutoSave.WasActive;
-
-        ToggleGUI(wasActive);
-        ChangeButtonStates(wasActive);
-
-        if (!wasActive)
-            return;
-
-        Task _ = Timer();
-    }
-
-    /// <summary> Try to wait one second break if the timer should be stopped </summary>
-    private async Task TryWaitOneSecond()
-    {
-        for (var i = 0; i < 10; i++)
-        {
-            if (_breakTimer || _stopTimer)
-                return;
-
-            await Task.Delay(100);
-        }
+        UpdateGUI(tick, false);
     }
 
     /// <summary> Update the gui </summary>
+    /// <param name="currentSecond"> Current second of the timer </param>
     /// <param name="forceUpdateNextSave"> Forces the gui to update after the next auto save </param>
-    private void UpdateGUI(bool forceUpdateNextSave = false)
+    private void UpdateGUI(int currentSecond, bool forceUpdateNextSave)
     {
         var intervalValue = SaveValues.AutoSave.Interval;
 
-        if (_currentSecond >= intervalValue)
+        if (currentSecond >= intervalValue)
         {
-            Save();
-            _currentSecond = 0;
             _lastSave.text = DateTime.Now.ToString("HH:mm:ss");
             _nextSave.text = DateTime.Now.AddSeconds(intervalValue).ToString("HH:mm:ss");
         }
@@ -335,7 +227,22 @@ internal class AutoSave : EditorWindowBase
             _nextSave.text = DateTime.Now.AddSeconds(intervalValue).ToString("HH:mm:ss");
 
         _nextSaveProgress.highValue = intervalValue;
-        _nextSaveProgress.value = _currentSecond;
+        _nextSaveProgress.value = currentSecond;
+    }
+
+    /// <summary> Update the gui based on if the application is running </summary>
+    private void UpdatePlayEditModeGUI()
+    {
+        if (EditorApplication.isPlaying)
+        {
+            _playMode.style.display = DisplayStyle.Flex;
+            _editMode.style.display = DisplayStyle.None;
+        }
+        else
+        {
+            _playMode.style.display = DisplayStyle.None;
+            _editMode.style.display = DisplayStyle.Flex;
+        }
     }
 
     /// <summary> Update all static gui parts </summary>
@@ -343,7 +250,6 @@ internal class AutoSave : EditorWindowBase
     {
         var intervalValue = SaveValues.AutoSave.Interval;
 
-        _nextSave.text = DateTime.Now.AddSeconds(intervalValue).ToString("HH:mm:ss");
         _nextSaveProgress.highValue = intervalValue;
         _interval.text = $"{intervalValue} Seconds";
     }
