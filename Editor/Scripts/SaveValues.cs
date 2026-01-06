@@ -14,7 +14,6 @@ internal static partial class SaveValues
     {
         public static Action onSettingsChanged;
         public static Action <bool> onIsActiveChanged;
-        public static Action <bool> onDisplayToolbarToggleChanged;
 
         public static Action <string> onDuplicatePathChanged;
         public static Action <bool> onWarningChanged;
@@ -25,7 +24,7 @@ internal static partial class SaveValues
         private static CacheValue <bool> s_warning = new() {defaultValue = true};
         private static CacheValue <int> s_interval = new() {defaultValue = 30};
         private static CacheValue <int> s_saveMode = new() {defaultValue = 0};
-        private static CacheValue <bool> s_displayToolbarToggle = new() {defaultValue = true};
+        private static CacheValue <bool> s_toolbarInitialized = new() {defaultValue = false};
 
         private static CacheValue <bool> s_isActive = new() {defaultValue = false};
 
@@ -91,14 +90,10 @@ internal static partial class SaveValues
             set => ValueProperty.Set("ApplyPS_AutoSaveWindow", value, ref s_applyPSAutoSaveWindow, _Settings);
         }
 
-        public static bool DisplayToolbarToggle
+        public static bool ToolbarInitialized
         {
-            get => ValueProperty.Get("DisplayToolbarToggle", ref s_displayToolbarToggle, _Settings);
-            set
-            {
-                ValueProperty.Set("DisplayToolbarToggle", value, ref s_displayToolbarToggle, _Settings);
-                onDisplayToolbarToggleChanged?.Invoke(value);
-            }
+            get => ValueProperty.Get("ToolbarInitialized", ref s_toolbarInitialized, _Settings);
+            set => ValueProperty.Set("ToolbarInitialized", value, ref s_toolbarInitialized, _Settings);
         }
 
         public static bool IsActive

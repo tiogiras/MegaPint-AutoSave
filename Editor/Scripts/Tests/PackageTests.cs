@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MegaPint.Editor.Scripts.PackageManager.Packages;
 using MegaPint.Editor.Scripts.Tests.Utility;
 using NUnit.Framework;
+using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
 
@@ -44,7 +45,7 @@ internal class PackageTests
         var isValid = true;
 
         TestsUtility.ValidateResource <VisualTreeAsset>(ref isValid, Constants.AutoSave.UserInterface.AutoSaveWindow);
-        TestsUtility.ValidateResource <VisualTreeAsset>(ref isValid, Constants.AutoSave.UserInterface.ToolbarButton);
+        TestsUtility.ValidateResource <Texture2D>(ref isValid, Constants.AutoSave.Images.ToolbarButton);
 
         Assert.IsTrue(isValid);
     }
